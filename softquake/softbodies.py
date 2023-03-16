@@ -49,6 +49,15 @@ class Link:
         self.stiffness = stiffness
         self.dampening = dampening
 
+    def get_vector(self) -> Vector:
+        """Get the displacement vector of the link."""
+        return self.nodes[1].position - self.nodes[0].position
+
+    def get_unit(self) -> Vector:
+        """Get the displacement unit vector of the link."""
+        vector = self.get_vector()
+        return vector.div(Vector.len(vector))
+
     def get_length(self) -> float:
         """Get the momentary length of the link."""
         return Vector.dist(self.nodes[0].position, self.nodes[1].position)
@@ -59,7 +68,8 @@ class Link:
 
     def get_velocity(self) -> float:
         """Get the speed of the expansion/contraction of the link (positive/negative)."""
-        return Vector.dot(self.nodes[0].position - self.nodes[1].position, self.nodes[0].velocity - self.nodes[1].velocity) / self.get_length()
+        return Vector.dot(self.nodes[1].velocity - self.nodes[0].velocity,
+                          self.nodes[1].position - self.nodes[0].position) / self.get_length()
 
     def get_stiffness_force(self) -> float:
         """Get the spring stiffness force expansion/contraction (positive/negative)."""

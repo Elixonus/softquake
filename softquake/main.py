@@ -11,13 +11,14 @@ from vectors import Vector
 if not path.exists("snapshots"):
     mkdir("snapshots")
 
-fps = 60
+fps = 30
 ips = 100
 delta = 1 / (fps * ips)
 time = 0
 shot = 0
 
-plate = RigidPlate(sines=[Sine(frequency=1, amplitude=0.2)], width=4, nodes=[])
+plate = RigidPlate(sines=[Sine(frequency=0.4, amplitude=1),
+                          Sine(frequency=1, amplitude=0.2)], width=4, nodes=[])
 
 nodes = []
 
@@ -43,14 +44,24 @@ for x in range(3):
         link = Link(nodes=(nodes[8 * x + y], nodes[8 * (x + 1) + (y + 1)]), stiffness=5000, dampening=20)
         links.append(link)
 
-for t in range(10):
+for x in range(4):
+    node = nodes[8 * x]
+    plate.nodes.append(node)
+
+for t in range(2):
     for s in range(fps):
         for i in range(ips):
             plate.set_kinematics(time)
-            plate.set_nodes()
+            plate.set_nodes(0.8)
 
             for node in nodes:
                 node.force.set(Vector(0, -9.8 * node.mass))
+
+            for link in links:
+                force = link.get_force()
+                unit = link.get_unit()
+                link.nodes[0].force -= unit * force
+                link.nodes[1].force += unit * force
 
             for node in nodes:
                 if node not in plate.nodes:
@@ -59,7 +70,7 @@ for t in range(10):
                     node.position += node.velocity * delta + 0.5 * node.acceleration * delta ** 2
                     node.velocity += 0.5 * (acceleration + node.acceleration) * delta
 
-            time = delta * (t * fps + s * ips + i)
+            time += delta
 
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1000, 1000)
         context = cairo.Context(surface)
@@ -105,7 +116,7 @@ for t in range(10):
         surface.write_to_png(f"snapshots/{shot:05}.png")
         shot += 1
 
-ffmpeg.input("snapshots/%05d.png", framerate=60).output("softquake.mp4").run(overwrite_output=True, quiet=False)
+ffmpeg.input("snapshots/%05d.png", framerate=fps).output("softquake.mp4").run(overwrite_output=True, quiet=False)
 
 files = glob("snapshots/*")
 for file in files:

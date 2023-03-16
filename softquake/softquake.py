@@ -45,10 +45,11 @@ class RigidPlate:
             self.velocity.x += tau * sine.frequency * sine.amplitude * cos(tau * (sine.frequency * time + sine.phase))
             self.acceleration.x -= (tau * sine.frequency) ** 2 * sine.amplitude * sin(tau * (sine.frequency * time + sine.phase))
 
-    def set_nodes(self) -> None:
+    def set_nodes(self, extent: float) -> None:
         for n, node in enumerate(self.nodes):
             node.position.set(self.position)
             if len(self.nodes) > 1:
-                node.position.x += 0.9 * self.width * (n / (len(self.nodes) - 1) - 0.5)
+                node.position.x += extent * self.width * (n / (len(self.nodes) - 1) - 0.5)
             node.velocity.set(self.velocity)
             node.acceleration.set(self.acceleration)
+            node.force.set(node.mass * node.acceleration)
