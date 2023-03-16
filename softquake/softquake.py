@@ -9,6 +9,11 @@ class Sine:
     amplitude: float
     phase: float
 
+    def __init__(self, frequency: float, amplitude: float, phase: float = 0) -> None:
+        self.frequency = frequency
+        self.amplitude = amplitude
+        self.phase = phase
+
     def get_sine(self, time: float) -> float:
         return self.amplitude * sin(tau * (self.frequency * time - self.phase))
 
@@ -21,7 +26,7 @@ class RigidPlate:
     velocity: Vector
     acceleration: Vector
 
-    def __init__(self, sines: list[Sine], width: float, nodes: list[Node], time: float) -> None:
+    def __init__(self, sines: list[Sine], width: float, nodes: list[Node], time: float = 0) -> None:
         self.sines = sines
         self.width = width
         self.nodes = nodes
@@ -47,4 +52,3 @@ class RigidPlate:
                 node.position.x += 0.9 * self.width * (n / (len(self.nodes) - 1) - 0.5)
             node.velocity.set(self.velocity)
             node.acceleration.set(self.acceleration)
-
