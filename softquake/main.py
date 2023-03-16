@@ -1,4 +1,5 @@
-from math import tau
+from math import pi, tau, sin
+from random import random
 from os import path, mkdir, rmdir, remove
 from glob import glob
 import cairo
@@ -8,8 +9,18 @@ from softquake import RigidPlate, Sine
 from softbodies import Softbody, Node, Link
 from vectors import Vector
 
-if not path.exists("snapshots"):
-    mkdir("snapshots")
+if path.isfile("video.mp4"):
+    print("Removing the video file.")
+    remove("video.mp4")
+
+if not path.exists("images"):
+    print("Making the images folder.")
+    mkdir("images")
+elif path.isdir("images"):
+    print("Removing the contents of the images folder.")
+    files = glob("images/*")
+    for file in files:
+        remove(file)
 
 fps = 30
 ips = 100
@@ -17,8 +28,15 @@ delta = 1 / (fps * ips)
 time = 0
 shot = 0
 
-plate = RigidPlate(sines=[Sine(frequency=0.4, amplitude=1),
-                          Sine(frequency=1, amplitude=0.2)], width=4, nodes=[])
+plate = RigidPlate(sines=[], width=4, nodes=[])
+
+sines = []
+
+for s in range(0, 100):
+    sine = Sine(frequency=0.02 * s + 0.2, amplitude=5 * random() / 100, phase=random())
+    sines.append(sine)
+
+plate.sines = sines
 
 nodes = []
 
@@ -48,7 +66,9 @@ for x in range(4):
     node = nodes[8 * x]
     plate.nodes.append(node)
 
-for t in range(2):
+print("Starting the simulation physics and animation loops.")
+
+for t in range(10):
     for s in range(fps):
         for i in range(ips):
             plate.set_kinematics(time)
@@ -87,6 +107,12 @@ for t in range(2):
         context.set_source_rgb(0, 1, 0)
         context.fill()
 
+        context.move_to(0, 200)
+        context.line_to(1000, 200)
+        context.set_line_width(10)
+        context.set_source_rgb(0, 0, 0)
+        context.stroke()
+
         context.scale(100, 100)
         context.translate(5, 5)
         context.translate(0, -4)
@@ -113,13 +139,14 @@ for t in range(2):
             context.set_source_rgb(0, 0, 0)
             context.stroke()
 
-        surface.write_to_png(f"snapshots/{shot:05}.png")
+        surface.write_to_png(f"images/{shot:05}.png")
         shot += 1
 
-ffmpeg.input("snapshots/%05d.png", framerate=fps).output("softquake.mp4").run(overwrite_output=True, quiet=False)
+print("Assembling the video file using the contents of the images folder.")
+ffmpeg.input("images/%05d.png", framerate=fps).output("video.mp4").run(overwrite_output=True, quiet=False)
 
-files = glob("snapshots/*")
+print("Removing the images folder.")
+files = glob("images/*")
 for file in files:
     remove(file)
-
-rmdir("snapshots")
+rmdir("images")
