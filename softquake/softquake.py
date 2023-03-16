@@ -1,6 +1,6 @@
 from __future__ import annotations
 from math import tau, sin, cos
-from softbodies import Softbody, Node, Link
+from softbodies import Node
 from vectors import Vector
 
 

@@ -1,0 +1,4 @@
+pycairo
+ffmpeg-python
+scipy
+matplotlib
