@@ -1,1 +1,1 @@
-import softquake
+import main
