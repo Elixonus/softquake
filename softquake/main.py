@@ -32,11 +32,7 @@ shot = 0
 
 plate = RigidPlate(sines=[], width=4, nodes=[])
 
-sines = []
-
-for s in range(0, 100):
-    sine = Sine(frequency=0.02 * s + 0.2, amplitude=5 * random() / 100, phase=random())
-    sines.append(sine)
+sines = [Sine(frequency=5, amplitude=0.5)]
 
 plate.sines = sines
 
@@ -66,13 +62,13 @@ points = np.array([
     [-1, 7],
     [0, 7],
     [1, 7],
+    [2, 7]
 ])
 
 pps = np.array([0, 1, 2])
 
 delaunay = Delaunay(points)
 simplices = delaunay.simplices
-used = np.full(shape=(len(points), len(points)), fill_value=False, dtype=bool)
 
 nodes = []
 
@@ -81,19 +77,24 @@ for point in points:
     nodes.append(node)
 
 links = []
+triangles = []
 
 for simplex in simplices:
-    def add_link_maybe(vertex1, vertex2):
-        if not used[vertex1][vertex2]:
-            used[vertex1][vertex2] = True
-            used[vertex2][vertex1] = True
-            link = Link(nodes=(nodes[vertex1], nodes[vertex2]), stiffness=5000, dampening=20)
-            links.append(link)
-            return link
-        return None
-    add_link_maybe(simplex[0], simplex[1])
-    add_link_maybe(simplex[1], simplex[2])
-    add_link_maybe(simplex[2], simplex[0])
+    def add_link_maybe(n1, n2):
+        for link in links:
+            if ((link.nodes[0] == nodes[n1] and link.nodes[1] == nodes[n2]) or
+                    (link.nodes[0] == nodes[n2] and link.nodes[1] == nodes[n1])):
+                return link
+        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=5000, dampening=20)
+        links.append(link)
+        return link
+
+    link1 = add_link_maybe(simplex[0], simplex[1])
+    link2 = add_link_maybe(simplex[1], simplex[2])
+    link3 = add_link_maybe(simplex[2], simplex[0])
+
+    triangle = ([nodes[simplex[0]], nodes[simplex[1]], nodes[simplex[2]]], [link1, link2, link3])
+    triangles.append(triangle)
 
 for pp in pps:
     node = nodes[pp]
@@ -101,7 +102,7 @@ for pp in pps:
 
 print("Starting the simulation physics and animation loops.")
 
-for t in range(10):
+for t in range(1):
     for s in range(fps):
         for i in range(ips):
             plate.set_kinematics(time)
@@ -150,6 +151,14 @@ for t in range(10):
         context.set_line_width(0.1)
         context.set_source_rgb(0, 0, 0)
         context.stroke()
+
+        for triangle in triangles:
+            context.move_to(triangle[0][0].position.x, triangle[0][0].position.y)
+            context.line_to(triangle[0][1].position.x, triangle[0][1].position.y)
+            context.line_to(triangle[0][2].position.x, triangle[0][2].position.y)
+            context.close_path()
+            context.set_source_rgb(1, 1, 1)
+            context.fill()
 
         for link in links:
             context.move_to(link.nodes[0].position.x, link.nodes[0].position.y)
