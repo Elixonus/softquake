@@ -7,7 +7,7 @@ import ffmpeg
 import numpy as np
 from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
-from softquake import RigidPlate, Sine
+from softquake import RigidPlate, Sine, Load
 from softbodies import Softbody, Node, Link
 from vectors import Vector
 
@@ -32,7 +32,7 @@ shot = 0
 
 plate = RigidPlate(sines=[], width=4, nodes=[])
 
-sines = [Sine(frequency=1, amplitude=0.5)]
+sines = [Sine(frequency=0.25, amplitude=2)]
 
 plate.sines = sines
 
@@ -64,16 +64,20 @@ points = np.array([
     [1, 7],
 ])
 
-pps = np.array([0, 1, 2])
-
-delaunay = Delaunay(points)
-simplices = delaunay.simplices
-
 nodes = []
 
 for point in points:
-    node = Node(mass=1, position=Vector(point[0], point[1]))
+    node = Node(mass=0.1, position=Vector(point[0], point[1]))
     nodes.append(node)
+
+plate.nodes.extend([nodes[0], nodes[1], nodes[2]])
+plate.set_kinematics(time)
+plate.set_nodes(0.8)
+
+loads = [Load(node=nodes[-3], force=Vector(100, 0))]
+
+delaunay = Delaunay(points)
+simplices = delaunay.simplices
 
 links = []
 triangles = []
@@ -84,7 +88,7 @@ for simplex in simplices:
             if ((link.nodes[0] == nodes[n1] and link.nodes[1] == nodes[n2]) or
                     (link.nodes[0] == nodes[n2] and link.nodes[1] == nodes[n1])):
                 return link
-        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=5000, dampening=20)
+        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=1000, dampening=2)
         links.append(link)
         return link
 
@@ -95,20 +99,20 @@ for simplex in simplices:
     triangle = ([nodes[simplex[0]], nodes[simplex[1]], nodes[simplex[2]]], [link1, link2, link3])
     triangles.append(triangle)
 
-for pp in pps:
-    node = nodes[pp]
-    plate.nodes.append(node)
-
 print("Starting the simulation physics and animation loops.")
 
-for t in range(1):
+for t in range(2):
     for s in range(fps):
         for i in range(ips):
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
 
             for node in nodes:
-                node.force.set(Vector(0, -9.8 * node.mass))
+                node.force.set(Vector(0, -10 * node.mass))
+
+            for load in loads:
+                if load.node not in plate.nodes:
+                    node.force += load.force
 
             for link in links:
                 force = link.get_force()
@@ -163,16 +167,16 @@ for t in range(1):
                                (actual_semi - link1.get_length()) *
                                (actual_semi - link2.get_length()) *
                                (actual_semi - link3.get_length()))
-            diff = actual_area - natural_area
+            ratio = actual_area / natural_area
 
             context.move_to(triangle[0][0].position.x, triangle[0][0].position.y)
             context.line_to(triangle[0][1].position.x, triangle[0][1].position.y)
             context.line_to(triangle[0][2].position.x, triangle[0][2].position.y)
             context.close_path()
-            if diff < 0:
-                context.set_source_rgb(1, min(max(1 - 5 * abs(diff), 0), 1), min(max(1 - 5 * abs(diff), 0), 1))
+            if ratio < 1:
+                context.set_source_rgb(1, min(max(20 * (ratio - 1) + 1, 0), 1), min(max(20 * (ratio - 1) + 1, 0), 1))
             else:
-                context.set_source_rgb(min(max(1 - 5 * diff, 0), 1), min(max(1 - 5 * diff, 0), 1), 1)
+                context.set_source_rgb(min(max(20 * (1 - ratio) + 1, 0), 1), min(max(20 * (1 - ratio) + 1, 0), 1), 1)
             context.fill()
 
         for link in links:

@@ -53,3 +53,12 @@ class RigidPlate:
             node.velocity.set(self.velocity)
             node.acceleration.set(self.acceleration)
             node.force.set(node.mass * node.acceleration)
+
+
+class Load:
+    node: Node
+    force: Vector
+
+    def __init__(self, node: Node, force: Vector) -> None:
+        self.node = node
+        self.force = force
