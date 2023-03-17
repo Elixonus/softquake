@@ -4,6 +4,8 @@ from os import path, mkdir, rmdir, remove
 from glob import glob
 import cairo
 import ffmpeg
+import numpy as np
+from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
 from softquake import RigidPlate, Sine
 from softbodies import Softbody, Node, Link
@@ -22,7 +24,7 @@ elif path.isdir("images"):
     for file in files:
         remove(file)
 
-fps = 30
+fps = 60
 ips = 100
 delta = 1 / (fps * ips)
 time = 0
@@ -45,26 +47,30 @@ for x in range(4):
         node = Node(mass=1, position=Vector(3 * (x / 3 - 0.5), 6 * y / 7).add(plate.position))
         nodes.append(node)
 
+points = np.empty(shape=(len(nodes), 2))
+
+for n, node in enumerate(nodes):
+    points[n, 0] = node.position.x
+    points[n, 1] = node.position.y
+
+delaunay = Delaunay(points)
+simplices = delaunay.simplices
+
+# link = Link(nodes=(nodes[8 * x + y], nodes[8 * (x + 1) + y]), stiffness=5000, dampening=20)
+
 links = []
+used = np.full(shape=(len(nodes), len(nodes)), fill_value=False, dtype=bool)
 
-for x in range(3):
-    for y in range(8):
-        link = Link(nodes=(nodes[8 * x + y], nodes[8 * (x + 1) + y]), stiffness=5000, dampening=20)
-        links.append(link)
-
-for x in range(4):
-    for y in range(7):
-        link = Link(nodes=(nodes[8 * x + y], nodes[8 * x + (y + 1)]), stiffness=5000, dampening=20)
-        links.append(link)
-
-for x in range(3):
-    for y in range(7):
-        link = Link(nodes=(nodes[8 * x + y], nodes[8 * (x + 1) + (y + 1)]), stiffness=5000, dampening=20)
-        links.append(link)
-
-for x in range(4):
-    node = nodes[8 * x]
-    plate.nodes.append(node)
+for simplice in simplices:
+    def add_link_maybe(vertex1, vertex2):
+        if not used[vertex1][vertex2] or True:
+            used[vertex1][vertex2] = True
+            used[vertex2][vertex1] = True
+            link = Link(nodes=(nodes[vertex1], nodes[vertex2]), stiffness=5000, dampening=20)
+            links.append(link)
+    add_link_maybe(simplice[0], simplice[1])
+    add_link_maybe(simplice[1], simplice[2])
+    add_link_maybe(simplice[2], simplice[0])
 
 print("Starting the simulation physics and animation loops.")
 
@@ -100,18 +106,12 @@ for t in range(10):
         context.translate(0, -500)
 
         context.rectangle(0, 0, 1000, 1000)
-        context.set_source_rgb(0.5, 1, 1)
+        context.set_source_rgb(0, 1, 1)
         context.fill()
 
         context.rectangle(0, 0, 1000, 200)
         context.set_source_rgb(0, 1, 0)
         context.fill()
-
-        context.move_to(0, 200)
-        context.line_to(1000, 200)
-        context.set_line_width(10)
-        context.set_source_rgb(0, 0, 0)
-        context.stroke()
 
         context.scale(100, 100)
         context.translate(5, 5)
