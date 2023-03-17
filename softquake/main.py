@@ -1,4 +1,4 @@
-from math import pi, tau, sin
+from math import pi, tau, sin, cos, sqrt
 from random import random
 from os import path, mkdir, rmdir, remove
 from glob import glob
@@ -40,37 +40,64 @@ for s in range(0, 100):
 
 plate.sines = sines
 
-nodes = []
+# points = np.empty(shape=(len(nodes), 2))
+points = np.array([
+    [-1, 0],
+    [0, 0],
+    [1, 0],
+    [-1, 1],
+    [0, 1],
+    [1, 1],
+    [-1, 2],
+    [0, 2],
+    [1, 2],
+    [-1, 3],
+    [0, 3],
+    [1, 3],
+    [-1, 4],
+    [0, 4],
+    [1, 4],
+    [-1, 5],
+    [0, 5],
+    [1, 5],
+    [-1, 6],
+    [0, 6],
+    [1, 6],
+    [-1, 7],
+    [0, 7],
+    [1, 7],
+])
 
-for x in range(4):
-    for y in range(8):
-        node = Node(mass=1, position=Vector(3 * (x / 3 - 0.5), 6 * y / 7).add(plate.position))
-        nodes.append(node)
-
-points = np.empty(shape=(len(nodes), 2))
-
-for n, node in enumerate(nodes):
-    points[n, 0] = node.position.x
-    points[n, 1] = node.position.y
+pps = np.array([0, 1, 2])
 
 delaunay = Delaunay(points)
 simplices = delaunay.simplices
+used = np.full(shape=(len(points), len(points)), fill_value=False, dtype=bool)
 
-# link = Link(nodes=(nodes[8 * x + y], nodes[8 * (x + 1) + y]), stiffness=5000, dampening=20)
+nodes = []
+
+for point in points:
+    node = Node(mass=1, position=Vector(point[0], point[1]))
+    nodes.append(node)
 
 links = []
-used = np.full(shape=(len(nodes), len(nodes)), fill_value=False, dtype=bool)
 
-for simplice in simplices:
+for simplex in simplices:
     def add_link_maybe(vertex1, vertex2):
-        if not used[vertex1][vertex2] or True:
+        if not used[vertex1][vertex2]:
             used[vertex1][vertex2] = True
             used[vertex2][vertex1] = True
             link = Link(nodes=(nodes[vertex1], nodes[vertex2]), stiffness=5000, dampening=20)
             links.append(link)
-    add_link_maybe(simplice[0], simplice[1])
-    add_link_maybe(simplice[1], simplice[2])
-    add_link_maybe(simplice[2], simplice[0])
+            return link
+        return None
+    add_link_maybe(simplex[0], simplex[1])
+    add_link_maybe(simplex[1], simplex[2])
+    add_link_maybe(simplex[2], simplex[0])
+
+for pp in pps:
+    node = nodes[pp]
+    plate.nodes.append(node)
 
 print("Starting the simulation physics and animation loops.")
 
