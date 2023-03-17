@@ -1,4 +1,4 @@
-from math import pi, tau, sin, cos, sqrt, floor, ceil
+from math import pi, tau, sin, cos, sqrt, atan2
 from random import random
 from os import path, mkdir, rmdir, remove
 from glob import glob
@@ -7,7 +7,7 @@ import ffmpeg
 import numpy as np
 from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
-from softquake import RigidPlate, Sine, Load
+from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Softbody, Node, Link
 from vectors import Vector
 
@@ -74,7 +74,9 @@ plate.nodes.extend([nodes[0], nodes[1], nodes[2]])
 plate.set_kinematics(time)
 plate.set_nodes(0.8)
 
-loads = [Load(node=nodes[-3], force=Vector(100, 0))]
+loads = [Load(node=nodes[-3], force=Vector(10, 0))]
+
+sensor = Sensor(node=nodes[-2])
 
 delaunay = Delaunay(points)
 simplices = delaunay.simplices
@@ -101,7 +103,7 @@ for simplex in simplices:
 
 print("Starting the simulation physics and animation loops.")
 
-for t in range(2):
+for t in range(10):
     for s in range(fps):
         for i in range(ips):
             plate.set_kinematics(time)
@@ -126,8 +128,9 @@ for t in range(2):
                     node.acceleration = node.force / node.mass
                     node.position += node.velocity * delta + 0.5 * node.acceleration * delta ** 2
                     node.velocity += 0.5 * (acceleration + node.acceleration) * delta
-
             time += delta
+
+        sensor.record(time)
 
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1000, 1000)
         context = cairo.Context(surface)
@@ -194,6 +197,29 @@ for t in range(2):
             context.set_source_rgb(0, 0, 0)
             context.stroke()
 
+        for load in loads:
+            if load.force.len() < 1e-5:
+                continue
+
+            context.save()
+            context.translate(load.node.position.x, load.node.position.y)
+            context.rotate(atan2(-load.force.y, -load.force.x))
+            context.translate(0.3, 0)
+            context.move_to(0, 0)
+            context.line_to(0.3, 0.3)
+            context.line_to(0.3, 0.08)
+            context.line_to(0.9, 0.12)
+            context.line_to(0.9, -0.12)
+            context.line_to(0.3, -0.08)
+            context.line_to(0.3, -0.3)
+            context.close_path()
+            context.set_source_rgb(1, 1, 0)
+            context.fill_preserve()
+            context.set_line_width(0.1)
+            context.set_source_rgb(0, 0, 0)
+            context.stroke()
+            context.restore()
+
         surface.write_to_png(f"images/{shot:05}.png")
         shot += 1
 
@@ -205,3 +231,13 @@ files = glob("images/*")
 for file in files:
     remove(file)
 rmdir("images")
+
+t = np.array(sensor.times)
+x = np.array(sensor.positions_x)
+
+fig, (ax1, ax2) = plt.subplots(nrows=2)
+ax1.plot(t, x)
+ax2.specgram(x, NFFT=1024, Fs=1/(ips * delta))
+fig.savefig("figure.png")
+
+print(sensor.positions_x)

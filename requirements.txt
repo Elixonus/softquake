@@ -1,4 +1,5 @@
 pycairo
 ffmpeg-python
+numpy
 scipy
 matplotlib

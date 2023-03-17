@@ -62,3 +62,19 @@ class Load:
     def __init__(self, node: Node, force: Vector) -> None:
         self.node = node
         self.force = force
+
+
+class Sensor:
+    node: Node
+    times: list[float]
+    positions_x: list[float]
+
+    def __init__(self, node: Node) -> None:
+        self.node = node
+        self.times = []
+        self.positions_x = []
+
+    def record(self, time) -> None:
+        self.times.append(time)
+        acceleration_x = self.node.acceleration.x
+        self.positions_x.append(acceleration_x)
