@@ -1,4 +1,4 @@
-from math import pi, tau, sin, cos, sqrt
+from math import pi, tau, sin, cos, sqrt, floor, ceil
 from random import random
 from os import path, mkdir, rmdir, remove
 from glob import glob
@@ -32,7 +32,7 @@ shot = 0
 
 plate = RigidPlate(sines=[], width=4, nodes=[])
 
-sines = [Sine(frequency=5, amplitude=0.5)]
+sines = [Sine(frequency=1, amplitude=0.5)]
 
 plate.sines = sines
 
@@ -62,7 +62,6 @@ points = np.array([
     [-1, 7],
     [0, 7],
     [1, 7],
-    [2, 7]
 ])
 
 pps = np.array([0, 1, 2])
@@ -153,11 +152,27 @@ for t in range(1):
         context.stroke()
 
         for triangle in triangles:
+            link1, link2, link3 = triangle[1][0], triangle[1][1], triangle[1][2]
+            natural_semi = 0.5 * (link1.length + link2.length + link3.length)
+            actual_semi = 0.5 * (link1.get_length() + link2.get_length() + link3.get_length())
+            natural_area = sqrt(natural_semi *
+                                (natural_semi - link1.length) *
+                                (natural_semi - link2.length) *
+                                (natural_semi - link3.length))
+            actual_area = sqrt(actual_semi *
+                               (actual_semi - link1.get_length()) *
+                               (actual_semi - link2.get_length()) *
+                               (actual_semi - link3.get_length()))
+            diff = actual_area - natural_area
+
             context.move_to(triangle[0][0].position.x, triangle[0][0].position.y)
             context.line_to(triangle[0][1].position.x, triangle[0][1].position.y)
             context.line_to(triangle[0][2].position.x, triangle[0][2].position.y)
             context.close_path()
-            context.set_source_rgb(1, 1, 1)
+            if diff < 0:
+                context.set_source_rgb(1, min(max(1 - 5 * abs(diff), 0), 1), min(max(1 - 5 * abs(diff), 0), 1))
+            else:
+                context.set_source_rgb(min(max(1 - 5 * diff, 0), 1), min(max(1 - 5 * diff, 0), 1), 1)
             context.fill()
 
         for link in links:
