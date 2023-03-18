@@ -11,12 +11,16 @@ from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Softbody, Node, Link
 from vectors import Vector
 
-if not path.exists("images"):
+if not path.exists("output"):
+    print("Making the output folder.")
+    mkdir("output")
+
+if not path.exists("output/images"):
     print("Making the images folder.")
-    mkdir("images")
-elif path.isdir("images"):
+    mkdir("output/images")
+elif path.isdir("output/images"):
     print("Removing the contents of the images folder.")
-    files = glob("images/*")
+    files = glob("output/images/*")
     for file in files:
         remove(file)
 
@@ -28,7 +32,7 @@ shot = 0
 
 plate = RigidPlate(sines=[], width=4, nodes=[])
 
-sines = [Sine(frequency=3, amplitude=0.1)]
+sines = [Sine(frequency=0.5, amplitude=1)]
 
 plate.sines = sines
 
@@ -69,9 +73,9 @@ plate.nodes.extend([nodes[0], nodes[1], nodes[2]])
 plate.set_kinematics(time)
 plate.set_nodes(0.8)
 
-loads = [Load(node=nodes[-3], force=Vector(1000, 0)),
-         Load(node=nodes[-6], force=Vector(1000, 0)),
-         Load(node=nodes[-9], force=Vector(1000, 0))]
+loads = [Load(node=nodes[-3], force=Vector(20000, 0)),
+         Load(node=nodes[-6], force=Vector(20000, 0)),
+         Load(node=nodes[-9], force=Vector(20000, 0))]
 
 sensor = Sensor(node=nodes[-2])
 
@@ -98,6 +102,8 @@ for simplex in simplices:
     triangle = ([nodes[simplex[0]], nodes[simplex[1]], nodes[simplex[2]]], [link1, link2, link3])
     triangles.append(triangle)
 
+energies = []
+
 print("Starting the simulation physics and animation loops.")
 
 for t in range(5):
@@ -107,7 +113,7 @@ for t in range(5):
             plate.set_nodes(0.8)
 
             for node in nodes:
-                node.force.set(Vector(0, -10 * node.mass))
+                node.force.set(Vector(0, -9.8 * node.mass))
 
             for load in loads:
                 if load.node not in plate.nodes:
@@ -126,6 +132,8 @@ for t in range(5):
                     node.position += node.velocity * delta + 0.5 * node.acceleration * delta ** 2
                     node.velocity += 0.5 * (acceleration + node.acceleration) * delta
 
+            energy = sum(0.5 * link.stiffness * (link.get_displacement() ** 2) for link in links)
+            energies.append(energy)
             sensor.record(time)
 
             time += delta
@@ -238,22 +246,24 @@ for t in range(5):
         context.stroke()
         context.restore()
 
-        surface.write_to_png(f"images/{shot:05}.png")
+        surface.write_to_png(f"output/images/{shot:05}.png")
         shot += 1
 
 print("Assembling the video file using the contents of the images folder.")
-ffmpeg.input("images/%05d.png", framerate=fps).output("video.mp4").run(overwrite_output=True, quiet=False)
+ffmpeg.input("output/images/%05d.png", framerate=fps).output("output/video.mp4").run(overwrite_output=True, quiet=False)
 
 print("Removing the images folder.")
-files = glob("images/*")
+files = glob("output/images/*")
 for file in files:
     remove(file)
-rmdir("images")
+rmdir("output/images")
 
 t = np.array(sensor.times)
 d = np.array(sensor.positions_x)
 v = np.array(sensor.velocities_x)
 a = np.array(sensor.accelerations_x)
+g = a / 9.8
+e = np.array(energies)
 
 plt.style.use("dark_background")
 fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
@@ -266,14 +276,21 @@ ax2.set_xlabel("Time (s)")
 ax2.set_ylabel("Velocity (m/s)")
 ax3.plot(t, a, color="magenta")
 ax3.set_xlabel("Time (s)")
-ax3.set_ylabel("Acceleration (m/s/s)")
-fig1.savefig("figure1.png")
+ax3.set_ylabel("G-force")
+fig1.savefig("output/figure1.png")
 
 fig2, ax4 = plt.subplots()
 spectrogram = ax4.specgram(a[::100], NFFT=64, Fs=1/(100 * delta), noverlap=56, mode="magnitude", cmap="inferno")[3]
 colorbar = fig2.colorbar(spectrogram, ax=ax4)
-ax4.set_title("Horizontal acceleration magnitude spectrogram")
+ax4.set_title("Horizontal acceleration of the \"sensor\" node spectrogram")
 ax4.set_xlabel("Time (s)")
 ax4.set_ylabel("Frequency (hz)")
 colorbar.set_label("Magnitude (m/s/s)")
-fig2.savefig("figure2.png")
+fig2.savefig("output/figure2.png")
+
+fig3, ax5 = plt.subplots()
+ax5.set_title("Combined elastic potential energy of links")
+ax5.plot(t, e, color="yellow")
+ax5.set_xlabel("Time (s)")
+ax5.set_ylabel("Energy (J)")
+fig3.savefig("output/figure3.png")

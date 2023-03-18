@@ -1,6 +1,4 @@
-softquake/video.mp4
-softquake/figure.png
-softquake/images/*
+*/output/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
