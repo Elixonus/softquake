@@ -28,11 +28,10 @@ shot = 0
 
 plate = RigidPlate(sines=[], width=4, nodes=[])
 
-sines = [Sine(frequency=0.25, amplitude=2)]
+sines = [Sine(frequency=0.5, amplitude=1)]
 
 plate.sines = sines
 
-# points = np.empty(shape=(len(nodes), 2))
 points = np.array([
     [-1, 0],
     [0, 0],
@@ -88,7 +87,7 @@ for simplex in simplices:
             if ((link.nodes[0] == nodes[n1] and link.nodes[1] == nodes[n2]) or
                     (link.nodes[0] == nodes[n2] and link.nodes[1] == nodes[n1])):
                 return link
-        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=6e6, dampening=1e4)
+        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=6e6, dampening=1e3)
         links.append(link)
         return link
 
@@ -101,7 +100,7 @@ for simplex in simplices:
 
 print("Starting the simulation physics and animation loops.")
 
-for t in range(2):
+for t in range(5):
     for s in range(fps):
         for i in range(ips):
             plate.set_kinematics(time)
@@ -196,26 +195,6 @@ for t in range(2):
             context.set_source_rgb(0, 0, 0)
             context.stroke()
 
-        context.save()
-        context.translate(sensor.node.position.x, sensor.node.position.y)
-        context.move_to(0.3, 0)
-        context.line_to(0, 0)
-        context.line_to(0, 0.3)
-        context.line_to(0, 0)
-        context.line_to(-0.3, 0)
-        context.line_to(0, 0)
-        context.line_to(0, -0.3)
-        context.line_to(0, 0)
-        context.line_to(0.3, 0)
-        context.arc(0, 0, 0.3, 0, tau)
-        context.set_line_width(0.2)
-        context.set_source_rgb(0, 0, 0)
-        context.stroke_preserve()
-        context.set_line_width(0.05)
-        context.set_source_rgb(1, 1, 0)
-        context.stroke()
-        context.restore()
-
         for load in loads:
             if load.force.len() < 1e-5:
                 continue
@@ -238,6 +217,26 @@ for t in range(2):
             context.set_source_rgb(0, 0, 0)
             context.stroke()
             context.restore()
+
+        context.save()
+        context.translate(sensor.node.position.x, sensor.node.position.y)
+        context.move_to(0.3, 0)
+        context.line_to(0, 0)
+        context.line_to(0, 0.3)
+        context.line_to(0, 0)
+        context.line_to(-0.3, 0)
+        context.line_to(0, 0)
+        context.line_to(0, -0.3)
+        context.line_to(0, 0)
+        context.line_to(0.3, 0)
+        context.arc(0, 0, 0.3, 0, tau)
+        context.set_line_width(0.2)
+        context.set_source_rgb(0, 0, 0)
+        context.stroke_preserve()
+        context.set_line_width(0.05)
+        context.set_source_rgb(1, 1, 0)
+        context.stroke()
+        context.restore()
 
         surface.write_to_png(f"images/{shot:05}.png")
         shot += 1
