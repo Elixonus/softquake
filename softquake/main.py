@@ -11,10 +11,6 @@ from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Softbody, Node, Link
 from vectors import Vector
 
-if path.isfile("video.mp4"):
-    print("Removing the video file.")
-    remove("video.mp4")
-
 if not path.exists("images"):
     print("Making the images folder.")
     mkdir("images")
@@ -67,14 +63,16 @@ points = np.array([
 nodes = []
 
 for point in points:
-    node = Node(mass=0.1, position=Vector(point[0], point[1]))
+    node = Node(mass=1e3, position=Vector(point[0], point[1]))
     nodes.append(node)
 
 plate.nodes.extend([nodes[0], nodes[1], nodes[2]])
 plate.set_kinematics(time)
 plate.set_nodes(0.8)
 
-loads = [Load(node=nodes[-3], force=Vector(10, 0))]
+loads = [Load(node=nodes[-3], force=Vector(1000, 0)),
+         Load(node=nodes[-6], force=Vector(1000, 0)),
+         Load(node=nodes[-9], force=Vector(1000, 0))]
 
 sensor = Sensor(node=nodes[-2])
 
@@ -90,7 +88,7 @@ for simplex in simplices:
             if ((link.nodes[0] == nodes[n1] and link.nodes[1] == nodes[n2]) or
                     (link.nodes[0] == nodes[n2] and link.nodes[1] == nodes[n1])):
                 return link
-        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=1000, dampening=2)
+        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=6e6, dampening=1e4)
         links.append(link)
         return link
 
@@ -103,7 +101,7 @@ for simplex in simplices:
 
 print("Starting the simulation physics and animation loops.")
 
-for t in range(10):
+for t in range(2):
     for s in range(fps):
         for i in range(ips):
             plate.set_kinematics(time)
@@ -128,9 +126,10 @@ for t in range(10):
                     node.acceleration = node.force / node.mass
                     node.position += node.velocity * delta + 0.5 * node.acceleration * delta ** 2
                     node.velocity += 0.5 * (acceleration + node.acceleration) * delta
-            time += delta
 
-        sensor.record(time)
+            sensor.record(time)
+
+            time += delta
 
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1000, 1000)
         context = cairo.Context(surface)
@@ -197,6 +196,26 @@ for t in range(10):
             context.set_source_rgb(0, 0, 0)
             context.stroke()
 
+        context.save()
+        context.translate(sensor.node.position.x, sensor.node.position.y)
+        context.move_to(0.3, 0)
+        context.line_to(0, 0)
+        context.line_to(0, 0.3)
+        context.line_to(0, 0)
+        context.line_to(-0.3, 0)
+        context.line_to(0, 0)
+        context.line_to(0, -0.3)
+        context.line_to(0, 0)
+        context.line_to(0.3, 0)
+        context.arc(0, 0, 0.3, 0, tau)
+        context.set_line_width(0.2)
+        context.set_source_rgb(0, 0, 0)
+        context.stroke_preserve()
+        context.set_line_width(0.05)
+        context.set_source_rgb(1, 1, 0)
+        context.stroke()
+        context.restore()
+
         for load in loads:
             if load.force.len() < 1e-5:
                 continue
@@ -233,11 +252,21 @@ for file in files:
 rmdir("images")
 
 t = np.array(sensor.times)
-x = np.array(sensor.positions_x)
+d = np.array(sensor.positions_x)
+v = np.array(sensor.velocities_x)
+a = np.array(sensor.accelerations_x)
 
-fig, (ax1, ax2) = plt.subplots(nrows=2)
-ax1.plot(t, x)
-ax2.specgram(x, NFFT=1024, Fs=1/(ips * delta))
+plt.style.use("dark_background")
+fig, (ax1, ax2, ax3) = plt.subplots(nrows=3)
+fig.suptitle("Kinematics of the sensor node.")
+ax1.plot(t, d, color="red")
+ax1.set_xlabel("Time (s)")
+ax1.set_ylabel("Displacement (m)")
+ax2.plot(t, v, color="dodgerblue")
+ax2.set_xlabel("Time (s)")
+ax2.set_ylabel("Velocity (m/s)")
+ax3.plot(t, a, color="magenta")
+ax3.set_xlabel("Time (s)")
+ax3.set_ylabel("Acceleration (m/s/s)")
+
 fig.savefig("figure.png")
-
-print(sensor.positions_x)

@@ -68,13 +68,18 @@ class Sensor:
     node: Node
     times: list[float]
     positions_x: list[float]
+    velocities_x: list[float]
+    accelerations_x: list[float]
 
     def __init__(self, node: Node) -> None:
         self.node = node
         self.times = []
         self.positions_x = []
+        self.velocities_x = []
+        self.accelerations_x = []
 
     def record(self, time) -> None:
         self.times.append(time)
-        acceleration_x = self.node.acceleration.x
-        self.positions_x.append(acceleration_x)
+        self.positions_x.append(self.node.position.x)
+        self.velocities_x.append(self.node.velocity.x)
+        self.accelerations_x.append(self.node.acceleration.x)
