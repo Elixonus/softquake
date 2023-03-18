@@ -280,9 +280,9 @@ ax3.set_ylabel("G-force")
 fig1.savefig("output/figure1.png")
 
 fig2, ax4 = plt.subplots()
-spectrogram = ax4.specgram(a[::100], NFFT=64, Fs=1/(100 * delta), noverlap=56, mode="magnitude", cmap="inferno")[3]
+spectrogram = ax4.specgram(a[::100], NFFT=64, Fs=1/(100 * delta), noverlap=56, cmap="inferno")[3]
 colorbar = fig2.colorbar(spectrogram, ax=ax4)
-ax4.set_title("Horizontal acceleration of the \"sensor\" node spectrogram")
+ax4.set_title("Spectrogram of power spectral density of \n horizontal acceleration of the \"sensor\" node")
 ax4.set_xlabel("Time (s)")
 ax4.set_ylabel("Frequency (hz)")
 colorbar.set_label("Magnitude (m/s/s)")
