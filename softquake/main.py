@@ -28,7 +28,7 @@ shot = 0
 
 plate = RigidPlate(sines=[], width=4, nodes=[])
 
-sines = [Sine(frequency=0.5, amplitude=1)]
+sines = [Sine(frequency=3, amplitude=0.1)]
 
 plate.sines = sines
 
@@ -111,7 +111,7 @@ for t in range(5):
 
             for load in loads:
                 if load.node not in plate.nodes:
-                    node.force += load.force
+                    load.node.force += load.force
 
             for link in links:
                 force = link.get_force()
@@ -256,8 +256,8 @@ v = np.array(sensor.velocities_x)
 a = np.array(sensor.accelerations_x)
 
 plt.style.use("dark_background")
-fig, (ax1, ax2, ax3) = plt.subplots(nrows=3)
-fig.suptitle("Kinematics of the sensor node.")
+fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
+fig1.suptitle("Horizontal kinematics of the \"sensor\" node in time")
 ax1.plot(t, d, color="red")
 ax1.set_xlabel("Time (s)")
 ax1.set_ylabel("Displacement (m)")
@@ -267,5 +267,13 @@ ax2.set_ylabel("Velocity (m/s)")
 ax3.plot(t, a, color="magenta")
 ax3.set_xlabel("Time (s)")
 ax3.set_ylabel("Acceleration (m/s/s)")
+fig1.savefig("figure1.png")
 
-fig.savefig("figure.png")
+fig2, ax4 = plt.subplots()
+spectrogram = ax4.specgram(a[::100], NFFT=64, Fs=1/(100 * delta), noverlap=56, mode="magnitude", cmap="inferno")[3]
+colorbar = fig2.colorbar(spectrogram, ax=ax4)
+ax4.set_title("Horizontal acceleration magnitude spectrogram")
+ax4.set_xlabel("Time (s)")
+ax4.set_ylabel("Frequency (hz)")
+colorbar.set_label("Magnitude (m/s/s)")
+fig2.savefig("figure2.png")
