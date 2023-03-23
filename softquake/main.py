@@ -1,5 +1,4 @@
 from math import pi, tau, sin, cos, sqrt, atan2
-from random import random
 from os import path, mkdir, rmdir, remove
 from glob import glob
 import cairo
@@ -7,6 +6,7 @@ import ffmpeg
 import numpy as np
 from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
+import pyinputplus as pyip
 from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Softbody, Node, Link
 from vectors import Vector
@@ -24,44 +24,135 @@ elif path.isdir("output/images"):
     for file in files:
         remove(file)
 
+
+#
+
+
+s = pyip.inputMenu(["Box", "House", "Letter"], lettered=True)
+print("Approximate Topology is:")
+if s == "Box":
+    print(
+        r"""
+        O--.O.--O
+        | / | \ |
+        O:--O--:O
+        | \ | / |
+        O--:O:--O
+        | / | \ |
+        O:--O--:O
+        | \ | / |
+        O--:O:--O
+        | / | \ |
+        O'--O--'O
+        """
+    )
+    points = np.array([
+        [-1, 0],
+        [0, 0],
+        [1, 0],
+        [-1, 1],
+        [0, 1],
+        [1, 1],
+        [-1, 2],
+        [0, 2],
+        [1, 2],
+        [-1, 3],
+        [0, 3],
+        [1, 3],
+        [-1, 4],
+        [0, 4],
+        [1, 4],
+        [-1, 5],
+        [0, 5],
+        [1, 5],
+        [-1, 6],
+        [0, 6],
+        [1, 6],
+        [-1, 7],
+        [0, 7],
+        [1, 7],
+    ])
+elif s == "House":
+    print(
+        r"""
+              O
+             / \
+            O:-:O
+           / \ / \
+          O--:O:--O
+         / \ / \ / \
+        O:-'O'-:O:-'O
+        | \ | / | \ |
+        O--:O:--O--:O
+        | / | \ | / |
+        O:--O--:O:--O
+        | \ | / | \ |
+        O--'O'--O--'O
+        """
+    )
+    points = np.array([
+        [-2, 0],
+        [-1, 0],
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [-2, 1],
+        [-1, 1],
+        [0, 1],
+        [1, 1],
+        [2, 1],
+        [-2, 2],
+        [-1, 2],
+        [0, 2],
+        [1, 2],
+        [2, 2],
+        [-2, 3],
+        [-1, 3],
+        [0, 3],
+        [1, 3],
+        [2, 3],
+        [-1.5, 4],
+        [-0.5, 4],
+        [0.5, 4],
+        [1.5, 4],
+        [-1, 5],
+        [0, 5],
+        [1, 5],
+        [-0.5, 6],
+        [0.5, 6],
+        [0, 7],
+    ])
+elif s == "Letter":
+    print(
+        r"""
+        
+        """
+    )
+
+
+
+
 fps = 60
 ips = 100
 delta = 1 / (fps * ips)
 time = 0
 shot = 0
 
-plate = RigidPlate(sines=[], width=4, nodes=[])
+earth = 9.8
 
-sines = [Sine(frequency=0.5, amplitude=1)]
+
+plate = RigidPlate(sines=[], width=0, nodes=[])
+
+if s == "Box":
+    plate.width = 4
+elif s == "House":
+    plate.width = 5
+elif s == "Letter":
+    plate.width = 4
+
+sines = [Sine(frequency=2, amplitude=0.02)]
 
 plate.sines = sines
-
-points = np.array([
-    [-1, 0],
-    [0, 0],
-    [1, 0],
-    [-1, 1],
-    [0, 1],
-    [1, 1],
-    [-1, 2],
-    [0, 2],
-    [1, 2],
-    [-1, 3],
-    [0, 3],
-    [1, 3],
-    [-1, 4],
-    [0, 4],
-    [1, 4],
-    [-1, 5],
-    [0, 5],
-    [1, 5],
-    [-1, 6],
-    [0, 6],
-    [1, 6],
-    [-1, 7],
-    [0, 7],
-    [1, 7],
-])
 
 nodes = []
 
@@ -69,13 +160,18 @@ for point in points:
     node = Node(mass=1e3, position=Vector(point[0], point[1]))
     nodes.append(node)
 
-plate.nodes.extend([nodes[0], nodes[1], nodes[2]])
+if s == "Box":
+    plate.nodes.extend([nodes[0], nodes[1], nodes[2]])
+elif s == "House":
+    plate.nodes.extend([nodes[0], nodes[1], nodes[2], nodes[3], nodes[4]])
+elif s == "Letter":
+    plate.nodes.extend([nodes[0], nodes[1], nodes[2]])
 plate.set_kinematics(time)
 plate.set_nodes(0.8)
 
-loads = [Load(node=nodes[-3], force=Vector(20000, 0)),
-         Load(node=nodes[-6], force=Vector(20000, 0)),
-         Load(node=nodes[-9], force=Vector(20000, 0))]
+loads = [Load(node=nodes[-3], force=Vector(10000, 0)),
+         Load(node=nodes[-6], force=Vector(10000, 0)),
+         Load(node=nodes[-9], force=Vector(10000, 0))]
 
 sensor = Sensor(node=nodes[-2])
 
@@ -91,7 +187,7 @@ for simplex in simplices:
             if ((link.nodes[0] == nodes[n1] and link.nodes[1] == nodes[n2]) or
                     (link.nodes[0] == nodes[n2] and link.nodes[1] == nodes[n1])):
                 return link
-        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=6e6, dampening=1e3)
+        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=6e6, dampening=4e3)
         links.append(link)
         return link
 
@@ -113,15 +209,21 @@ for t in range(5):
             plate.set_nodes(0.8)
 
             for node in nodes:
-                node.force.set(Vector(0, -9.8 * node.mass))
+                node.force.set(Vector(0, -earth * node.mass))
 
             for load in loads:
                 if load.node not in plate.nodes:
                     load.node.force += load.force
 
             for link in links:
-                force = link.get_force()
-                unit = link.get_unit()
+                try:
+                    force = link.get_force()
+                except ZeroDivisionError:
+                    force = 0
+                try:
+                    unit = link.get_unit()
+                except ZeroDivisionError:
+                    unit = Vector(0, 0)
                 link.nodes[0].force -= unit * force
                 link.nodes[1].force += unit * force
 
@@ -132,7 +234,14 @@ for t in range(5):
                     node.position += node.velocity * delta + 0.5 * node.acceleration * delta ** 2
                     node.velocity += 0.5 * (acceleration + node.acceleration) * delta
 
-            energy = sum(0.5 * link.stiffness * (link.get_displacement() ** 2) for link in links)
+            energy = 0
+
+            for link in links:
+                energy += 0.5 * link.stiffness * link.get_displacement() ** 2
+
+            for node in nodes:
+                energy += 0.5 * node.mass * node.velocity.len() ** 2
+
             energies.append(energy)
             sensor.record(time)
 
@@ -176,7 +285,10 @@ for t in range(5):
                                (actual_semi - link1.get_length()) *
                                (actual_semi - link2.get_length()) *
                                (actual_semi - link3.get_length()))
-            ratio = actual_area / natural_area
+            try:
+                ratio = actual_area / natural_area
+            except ZeroDivisionError:
+                ratio = 1
 
             context.move_to(triangle[0][0].position.x, triangle[0][0].position.y)
             context.line_to(triangle[0][1].position.x, triangle[0][1].position.y)
@@ -262,7 +374,7 @@ t = np.array(sensor.times)
 d = np.array(sensor.positions_x)
 v = np.array(sensor.velocities_x)
 a = np.array(sensor.accelerations_x)
-g = a / 9.8
+g = a / earth
 e = np.array(energies)
 
 plt.style.use("dark_background")
@@ -276,20 +388,20 @@ ax2.set_xlabel("Time (s)")
 ax2.set_ylabel("Velocity (m/s)")
 ax3.plot(t, a, color="magenta")
 ax3.set_xlabel("Time (s)")
-ax3.set_ylabel("G-force")
+ax3.set_ylabel("Acceleration (m/s/s)")
 fig1.savefig("output/figure1.png")
 
 fig2, ax4 = plt.subplots()
-spectrogram = ax4.specgram(a[::100], NFFT=64, Fs=1/(100 * delta), noverlap=56, cmap="inferno")[3]
+spectrogram = ax4.specgram(np.abs(a[::100]), NFFT=32, Fs=1/(100 * delta), noverlap=20, cmap="inferno")[3]
 colorbar = fig2.colorbar(spectrogram, ax=ax4)
-ax4.set_title("Spectrogram of power spectral density of \n horizontal acceleration of the \"sensor\" node")
+ax4.set_title("Spectrogram of power spectral density of \n horizontal acceleration magnitude of the \"sensor\" node")
 ax4.set_xlabel("Time (s)")
-ax4.set_ylabel("Frequency (hz)")
-colorbar.set_label("Magnitude (m/s/s)")
+ax4.set_ylabel("Frequency (Hz)")
+colorbar.set_label("PSD of Acceleration")
 fig2.savefig("output/figure2.png")
 
 fig3, ax5 = plt.subplots()
-ax5.set_title("Combined elastic potential energy of links")
+ax5.set_title("Combined elastic potential and kinetic energy.")
 ax5.plot(t, e, color="yellow")
 ax5.set_xlabel("Time (s)")
 ax5.set_ylabel("Energy (J)")
