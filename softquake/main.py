@@ -1,4 +1,4 @@
-from math import pi, tau, sin, cos, sqrt, atan2, floor
+from math import tau, sqrt, atan2, floor
 from os import path, mkdir, rmdir, remove
 from glob import glob
 from time import sleep
@@ -9,7 +9,7 @@ from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
 import pyinputplus as pyip
 from softquake import RigidPlate, Sine, Load, Sensor
-from softbodies import Softbody, Node, Link
+from softbodies import Node, Link
 from vectors import Vector
 
 if not path.exists("output"):
@@ -122,6 +122,8 @@ elif structure == "House":
         [0.5, 6],
         [0, 7],
     ])
+else:
+    points = np.array([])
 
 sleep(1)
 stiffness = pyip.inputMenu(["Low", "High"], prompt="Select the spring stiffness:\n", lettered=True)
@@ -158,7 +160,9 @@ print(
 )
 
 sleep(1)
-frequency = pyip.inputMenu(["Low", "Medium", "High"], prompt="Select the plate horizontal vibration frequency:\n", lettered=True)
+frequency = pyip.inputMenu(["Low", "Medium", "High"],
+                           prompt="Select the plate horizontal vibration frequency:\n",
+                           lettered=True)
 
 if frequency == "Low":
     frequency = 0.2
@@ -186,7 +190,7 @@ fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
 time = 0
-etime = 1
+etime = 5
 shot = 0
 
 earth = 9.8
@@ -250,13 +254,13 @@ triangles = []
 
 for simplex in simplices:
     def add_link_maybe(n1, n2):
-        for link in links:
-            if ((link.nodes[0] == nodes[n1] and link.nodes[1] == nodes[n2]) or
-                    (link.nodes[0] == nodes[n2] and link.nodes[1] == nodes[n1])):
-                return link
-        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=stiffness, dampening=dampening)
-        links.append(link)
-        return link
+        for linkm in links:
+            if ((linkm.nodes[0] == nodes[n1] and linkm.nodes[1] == nodes[n2]) or
+                    (linkm.nodes[0] == nodes[n2] and linkm.nodes[1] == nodes[n1])):
+                return linkm
+        linkm = Link(nodes=(nodes[n1], nodes[n2]), stiffness=stiffness, dampening=dampening)
+        links.append(linkm)
+        return linkm
 
     link1 = add_link_maybe(simplex[0], simplex[1])
     link2 = add_link_maybe(simplex[1], simplex[2])
