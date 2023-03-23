@@ -242,6 +242,7 @@ print("Starting the simulation physics and animation loops.")
 for t in range(2):
     for s in range(fps):
         for i in range(ips):
+            print(f"\rIterating through and currently at time = {time:.4f}.", end="")
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
 
@@ -398,8 +399,9 @@ for t in range(2):
         surface.write_to_png(f"output/images/{shot:05}.png")
         shot += 1
 
+print()
 print("Assembling the video file using the contents of the images folder.")
-ffmpeg.input("output/images/%05d.png", framerate=fps).output("output/video.mp4").run(overwrite_output=True, quiet=False)
+ffmpeg.input("output/images/%05d.png", framerate=fps).output("output/video.mp4").run(overwrite_output=True, quiet=True)
 
 print("Removing the images folder.")
 files = glob("output/images/*")
