@@ -133,6 +133,7 @@ elif stiffness == "High":
 else:
     stiffness = 0
 
+print("Spring Stiffness Diagram")
 print(
     fr"""
     D---^\/\/\/\/\/\/^---O -> {stiffness:.2e} N/m
@@ -148,6 +149,7 @@ elif dampening == "High":
 else:
     dampening = 0
 
+print("Spring Dampening Diagram")
 print(
     fr"""
     D------[::::::|------O -> {dampening:.2e} N*s/m
@@ -188,24 +190,27 @@ elif structure == "House":
 plate.set_kinematics(time)
 plate.set_nodes(0.8)
 
-l = "No"
+loads = pyip.inputMenu(["No", "Yes"], prompt="Apply external loads?\n", lettered=True)
 
-loads = []
-
-if l == "Yes":
+if loads == "Yes":
+    loads = []
     if structure == "Box":
-        loads.extend([Load(node=nodes[-3], force=Vector(10000, 0)),
-                      Load(node=nodes[-6], force=Vector(10000, 0)),
-                      Load(node=nodes[-9], force=Vector(10000, 0))])
+        loads.extend([Load(node=nodes[3], force=Vector(20000, 0)),
+                      Load(node=nodes[6], force=Vector(20000, 0)),
+                      Load(node=nodes[9], force=Vector(20000, 0)),
+                      Load(node=nodes[12], force=Vector(20000, 0)),
+                      Load(node=nodes[15], force=Vector(20000, 0)),
+                      Load(node=nodes[18], force=Vector(20000, 0)),
+                      Load(node=nodes[21], force=Vector(20000, 0))])
     elif structure == "House":
-        loads.extend([Load(node=nodes[-4], force=Vector(10000, 0)),
-                      Load(node=nodes[-3], force=Vector(10000, 0)),
-                      Load(node=nodes[-2], force=Vector(10000, 0))])
+        loads.extend([Load(node=nodes[-1], force=Vector(120000, 0))])
+else:
+    loads = []
 
 if structure == "Box":
     sensor = Sensor(node=nodes[-2])
 elif structure == "House":
-    sensor = Sensor(node=nodes[-5])
+    sensor = Sensor(node=nodes[-4])
 
 delaunay = Delaunay(points)
 simplices = delaunay.simplices
@@ -234,7 +239,7 @@ energies = []
 
 print("Starting the simulation physics and animation loops.")
 
-for t in range(5):
+for t in range(2):
     for s in range(fps):
         for i in range(ips):
             plate.set_kinematics(time)
