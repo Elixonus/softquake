@@ -28,9 +28,10 @@ elif path.isdir("output/images"):
 #
 
 
-s = pyip.inputMenu(["Box", "House", "Letter"], lettered=True)
+structure = pyip.inputMenu(["Box", "House"], prompt="Select a softbody structure preset:\n", lettered=True)
 print("Approximate Topology is:")
-if s == "Box":
+
+if structure == "Box":
     print(
         r"""
         O--.O.--O
@@ -72,7 +73,7 @@ if s == "Box":
         [0, 7],
         [1, 7],
     ])
-elif s == "House":
+elif structure == "House":
     print(
         r"""
               O
@@ -122,15 +123,36 @@ elif s == "House":
         [0.5, 6],
         [0, 7],
     ])
-elif s == "Letter":
-    print(
-        r"""
-        
-        """
-    )
 
+stiffness = pyip.inputMenu(["Low", "High"], prompt="Select the spring stiffness:\n", lettered=True)
 
+if stiffness == "Low":
+    stiffness = 2e6
+elif stiffness == "High":
+    stiffness = 6e6
+else:
+    stiffness = 0
 
+print(
+    fr"""
+    D---^\/\/\/\/\/\/^---O -> {stiffness:.2e} N/m
+    """
+)
+
+dampening = pyip.inputMenu(["Low", "High"], prompt="Select the spring dampening:\n", lettered=True)
+
+if dampening == "Low":
+    dampening = 1e3
+elif dampening == "High":
+    dampening = 4e3
+else:
+    dampening = 0
+
+print(
+    fr"""
+    D------[::::::|------O -> {dampening:.2e} N*s/m
+    """
+)
 
 fps = 60
 ips = 100
@@ -143,14 +165,12 @@ earth = 9.8
 
 plate = RigidPlate(sines=[], width=0, nodes=[])
 
-if s == "Box":
+if structure == "Box":
     plate.width = 4
-elif s == "House":
+elif structure == "House":
     plate.width = 5
-elif s == "Letter":
-    plate.width = 4
 
-sines = [Sine(frequency=2, amplitude=0.02)]
+sines = [Sine(frequency=2, amplitude=0.1)]
 
 plate.sines = sines
 
@@ -160,20 +180,32 @@ for point in points:
     node = Node(mass=1e3, position=Vector(point[0], point[1]))
     nodes.append(node)
 
-if s == "Box":
-    plate.nodes.extend([nodes[0], nodes[1], nodes[2]])
-elif s == "House":
-    plate.nodes.extend([nodes[0], nodes[1], nodes[2], nodes[3], nodes[4]])
-elif s == "Letter":
-    plate.nodes.extend([nodes[0], nodes[1], nodes[2]])
+if structure == "Box":
+    plate.nodes.extend(nodes[0:3])
+elif structure == "House":
+    plate.nodes.extend(nodes[0:5])
+
 plate.set_kinematics(time)
 plate.set_nodes(0.8)
 
-loads = [Load(node=nodes[-3], force=Vector(10000, 0)),
-         Load(node=nodes[-6], force=Vector(10000, 0)),
-         Load(node=nodes[-9], force=Vector(10000, 0))]
+l = "No"
 
-sensor = Sensor(node=nodes[-2])
+loads = []
+
+if l == "Yes":
+    if structure == "Box":
+        loads.extend([Load(node=nodes[-3], force=Vector(10000, 0)),
+                      Load(node=nodes[-6], force=Vector(10000, 0)),
+                      Load(node=nodes[-9], force=Vector(10000, 0))])
+    elif structure == "House":
+        loads.extend([Load(node=nodes[-4], force=Vector(10000, 0)),
+                      Load(node=nodes[-3], force=Vector(10000, 0)),
+                      Load(node=nodes[-2], force=Vector(10000, 0))])
+
+if structure == "Box":
+    sensor = Sensor(node=nodes[-2])
+elif structure == "House":
+    sensor = Sensor(node=nodes[-5])
 
 delaunay = Delaunay(points)
 simplices = delaunay.simplices
@@ -187,7 +219,7 @@ for simplex in simplices:
             if ((link.nodes[0] == nodes[n1] and link.nodes[1] == nodes[n2]) or
                     (link.nodes[0] == nodes[n2] and link.nodes[1] == nodes[n1])):
                 return link
-        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=6e6, dampening=4e3)
+        link = Link(nodes=(nodes[n1], nodes[n2]), stiffness=stiffness, dampening=dampening)
         links.append(link)
         return link
 
