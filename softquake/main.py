@@ -136,7 +136,7 @@ else:
 print("Spring Stiffness Diagram")
 print(
     fr"""
-    D---^\/\/\/\/\/\/^---O -> {stiffness:.2e} N/m
+    D---^\/\/\/\/\/\/^---O : {stiffness:.2e} N/m
     """
 )
 
@@ -152,7 +152,7 @@ else:
 print("Spring Dampening Diagram")
 print(
     fr"""
-    D--------[::|--------O -> {dampening:.2e} N*s/m
+    D--------[::|--------O : {dampening:.2e} N*s/m
     """
 )
 
@@ -264,11 +264,13 @@ for simplex in simplices:
 energies = []
 
 print("Starting the simulation physics and animation loops.")
+print("Leaping through the time dimension with Verlet method.")
 
 for t in range(2):
     for s in range(fps):
+        p = time / 2
+        print(f"Progress : {'-' * int(20 * p)}[:)]{'~' * int(20 * (1 - p))}", end="\r")
         for i in range(ipf):
-            print(f"\rIterating through and currently at time = {time:.4f} s.", end="")
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
 
@@ -428,7 +430,7 @@ for t in range(2):
         surface.write_to_png(f"output/frames/{shot:05}.png")
         shot += 1
 
-print()
+print("Progress : Done                                   ")
 print("Assembling the video file using the contents of the frames folder.")
 ffmpeg.input("output/frames/%05d.png", framerate=fps).output("output/video.mp4").run(overwrite_output=True, quiet=True)
 
