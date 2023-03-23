@@ -29,7 +29,7 @@ elif path.isdir("output/images"):
 
 
 structure = pyip.inputMenu(["Box", "House"], prompt="Select a softbody structure preset:\n", lettered=True)
-print("Approximate Topology is:")
+print("Approximate Topology Diagram")
 
 if structure == "Box":
     print(
@@ -127,9 +127,9 @@ elif structure == "House":
 stiffness = pyip.inputMenu(["Low", "High"], prompt="Select the spring stiffness:\n", lettered=True)
 
 if stiffness == "Low":
-    stiffness = 2e6
+    stiffness = 4e6
 elif stiffness == "High":
-    stiffness = 6e6
+    stiffness = 8e6
 else:
     stiffness = 0
 
@@ -242,7 +242,7 @@ print("Starting the simulation physics and animation loops.")
 for t in range(2):
     for s in range(fps):
         for i in range(ips):
-            print(f"\rIterating through and currently at time = {time:.4f}.", end="")
+            print(f"\rIterating through and currently at time = {time:.4f} s.", end="")
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
 
