@@ -15,12 +15,12 @@ if not path.exists("output"):
     print("Making the output folder.")
     mkdir("output")
 
-if not path.exists("output/images"):
-    print("Making the images folder.")
-    mkdir("output/images")
-elif path.isdir("output/images"):
-    print("Removing the contents of the images folder.")
-    files = glob("output/images/*")
+if not path.exists("output/frames"):
+    print("Making the frames folder.")
+    mkdir("output/frames")
+elif path.isdir("output/frames"):
+    print("Removing the contents of the frames folder.")
+    files = glob("output/frames/*")
     for file in files:
         remove(file)
 
@@ -152,13 +152,37 @@ else:
 print("Spring Dampening Diagram")
 print(
     fr"""
-    D------[::::::|------O -> {dampening:.2e} N*s/m
+    D--------[::|--------O -> {dampening:.2e} N*s/m
+    """
+)
+
+frequency = pyip.inputMenu(["Low", "Medium", "High"], prompt="Select the plate horizontal vibration frequency:\n", lettered=True)
+
+if frequency == "Low":
+    frequency = 0.2
+    amplitude = 2
+elif frequency == "Medium":
+    frequency = 2
+    amplitude = 0.2
+elif frequency == "High":
+    frequency = 10
+    amplitude = 0.05
+else:
+    frequency = 0
+    amplitude = 0
+
+print("Plate Vibration Diagram")
+print(
+    fr"""
+       ,_________,    : {frequency:.2f} Hz
+    <--|_________|--> : {amplitude:.2f} m
+    
     """
 )
 
 fps = 60
-ips = 100
-delta = 1 / (fps * ips)
+ipf = 100
+delta = 1 / (fps * ipf)
 time = 0
 shot = 0
 
@@ -172,7 +196,7 @@ if structure == "Box":
 elif structure == "House":
     plate.width = 5
 
-sines = [Sine(frequency=2, amplitude=0.1)]
+sines = [Sine(frequency=frequency, amplitude=amplitude)]
 
 plate.sines = sines
 
@@ -211,6 +235,8 @@ if structure == "Box":
     sensor = Sensor(node=nodes[-2])
 elif structure == "House":
     sensor = Sensor(node=nodes[-4])
+else:
+    sensor = None
 
 delaunay = Delaunay(points)
 simplices = delaunay.simplices
@@ -241,7 +267,7 @@ print("Starting the simulation physics and animation loops.")
 
 for t in range(2):
     for s in range(fps):
-        for i in range(ips):
+        for i in range(ipf):
             print(f"\rIterating through and currently at time = {time:.4f} s.", end="")
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
@@ -281,7 +307,9 @@ for t in range(2):
                 energy += 0.5 * node.mass * node.velocity.len() ** 2
 
             energies.append(energy)
-            sensor.record(time)
+
+            if sensor is not None:
+                sensor.record(time)
 
             time += delta
 
@@ -376,68 +404,71 @@ for t in range(2):
             context.stroke()
             context.restore()
 
-        context.save()
-        context.translate(sensor.node.position.x, sensor.node.position.y)
-        context.move_to(0.3, 0)
-        context.line_to(0, 0)
-        context.line_to(0, 0.3)
-        context.line_to(0, 0)
-        context.line_to(-0.3, 0)
-        context.line_to(0, 0)
-        context.line_to(0, -0.3)
-        context.line_to(0, 0)
-        context.line_to(0.3, 0)
-        context.arc(0, 0, 0.3, 0, tau)
-        context.set_line_width(0.2)
-        context.set_source_rgb(0, 0, 0)
-        context.stroke_preserve()
-        context.set_line_width(0.05)
-        context.set_source_rgb(1, 1, 0)
-        context.stroke()
-        context.restore()
+        if sensor is not None:
+            context.save()
+            context.translate(sensor.node.position.x, sensor.node.position.y)
+            context.move_to(0.3, 0)
+            context.line_to(0, 0)
+            context.line_to(0, 0.3)
+            context.line_to(0, 0)
+            context.line_to(-0.3, 0)
+            context.line_to(0, 0)
+            context.line_to(0, -0.3)
+            context.line_to(0, 0)
+            context.line_to(0.3, 0)
+            context.arc(0, 0, 0.3, 0, tau)
+            context.set_line_width(0.2)
+            context.set_source_rgb(0, 0, 0)
+            context.stroke_preserve()
+            context.set_line_width(0.05)
+            context.set_source_rgb(1, 1, 0)
+            context.stroke()
+            context.restore()
 
-        surface.write_to_png(f"output/images/{shot:05}.png")
+        surface.write_to_png(f"output/frames/{shot:05}.png")
         shot += 1
 
 print()
-print("Assembling the video file using the contents of the images folder.")
-ffmpeg.input("output/images/%05d.png", framerate=fps).output("output/video.mp4").run(overwrite_output=True, quiet=True)
+print("Assembling the video file using the contents of the frames folder.")
+ffmpeg.input("output/frames/%05d.png", framerate=fps).output("output/video.mp4").run(overwrite_output=True, quiet=True)
 
-print("Removing the images folder.")
-files = glob("output/images/*")
+print("Removing the frames folder.")
+files = glob("output/frames/*")
 for file in files:
     remove(file)
-rmdir("output/images")
+rmdir("output/frames")
 
-t = np.array(sensor.times)
-d = np.array(sensor.positions_x)
-v = np.array(sensor.velocities_x)
-a = np.array(sensor.accelerations_x)
-g = a / earth
-e = np.array(energies)
+if sensor is not None:
+    t = np.array(sensor.times)
+    d = np.array(sensor.positions_x)
+    v = np.array(sensor.velocities_x)
+    a = np.array(sensor.accelerations_x)
+    g = a / earth
+    e = np.array(energies)
 
-plt.style.use("dark_background")
-fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
-fig1.suptitle("Horizontal kinematics of the \"sensor\" node in time")
-ax1.plot(t, d, color="red")
-ax1.set_xlabel("Time (s)")
-ax1.set_ylabel("Displacement (m)")
-ax2.plot(t, v, color="dodgerblue")
-ax2.set_xlabel("Time (s)")
-ax2.set_ylabel("Velocity (m/s)")
-ax3.plot(t, a, color="magenta")
-ax3.set_xlabel("Time (s)")
-ax3.set_ylabel("Acceleration (m/s/s)")
-fig1.savefig("output/figure1.png")
+    plt.style.use("dark_background")
+    fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
+    fig1.suptitle("Horizontal kinematics of the \"sensor\" node in time")
+    ax1.plot(t, d, color="red")
+    ax1.set_xlabel("Time (s)")
+    ax1.set_ylabel("Displacement (m)")
+    ax2.plot(t, v, color="dodgerblue")
+    ax2.set_xlabel("Time (s)")
+    ax2.set_ylabel("Velocity (m/s)")
+    ax3.plot(t, a, color="magenta")
+    ax3.set_xlabel("Time (s)")
+    ax3.set_ylabel("Acceleration (m/s/s)")
+    fig1.savefig("output/figure1.png")
 
-fig2, ax4 = plt.subplots()
-spectrogram = ax4.specgram(np.abs(a[::100]), NFFT=32, Fs=1/(100 * delta), noverlap=20, cmap="inferno")[3]
-colorbar = fig2.colorbar(spectrogram, ax=ax4)
-ax4.set_title("Spectrogram of power spectral density of \n horizontal acceleration magnitude of the \"sensor\" node")
-ax4.set_xlabel("Time (s)")
-ax4.set_ylabel("Frequency (Hz)")
-colorbar.set_label("PSD of Acceleration")
-fig2.savefig("output/figure2.png")
+    fig2, ax4 = plt.subplots()
+    spectrogram = ax4.specgram(np.abs(a[::100]), NFFT=32, Fs=1 / (100 * delta), noverlap=20, cmap="inferno")[3]
+    colorbar = fig2.colorbar(spectrogram, ax=ax4)
+    ax4.set_title(
+        "Spectrogram of power spectral density of \n horizontal acceleration magnitude of the \"sensor\" node")
+    ax4.set_xlabel("Time (s)")
+    ax4.set_ylabel("Frequency (Hz)")
+    colorbar.set_label("PSD of Acceleration")
+    fig2.savefig("output/figure2.png")
 
 fig3, ax5 = plt.subplots()
 ax5.set_title("Combined elastic potential and kinetic energy.")
