@@ -1,6 +1,7 @@
-from math import pi, tau, sin, cos, sqrt, atan2
+from math import pi, tau, sin, cos, sqrt, atan2, floor
 from os import path, mkdir, rmdir, remove
 from glob import glob
+from time import sleep
 import cairo
 import ffmpeg
 import numpy as np
@@ -25,9 +26,7 @@ elif path.isdir("output/frames"):
         remove(file)
 
 
-#
-
-
+sleep(1)
 structure = pyip.inputMenu(["Box", "House"], prompt="Select a softbody structure preset:\n", lettered=True)
 print("Approximate Topology Diagram")
 
@@ -124,10 +123,11 @@ elif structure == "House":
         [0, 7],
     ])
 
+sleep(1)
 stiffness = pyip.inputMenu(["Low", "High"], prompt="Select the spring stiffness:\n", lettered=True)
 
 if stiffness == "Low":
-    stiffness = 4e6
+    stiffness = 2e6
 elif stiffness == "High":
     stiffness = 8e6
 else:
@@ -140,6 +140,7 @@ print(
     """
 )
 
+sleep(1)
 dampening = pyip.inputMenu(["Low", "High"], prompt="Select the spring dampening:\n", lettered=True)
 
 if dampening == "Low":
@@ -156,6 +157,7 @@ print(
     """
 )
 
+sleep(1)
 frequency = pyip.inputMenu(["Low", "Medium", "High"], prompt="Select the plate horizontal vibration frequency:\n", lettered=True)
 
 if frequency == "Low":
@@ -184,6 +186,7 @@ fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
 time = 0
+etime = 1
 shot = 0
 
 earth = 9.8
@@ -214,6 +217,7 @@ elif structure == "House":
 plate.set_kinematics(time)
 plate.set_nodes(0.8)
 
+sleep(1)
 loads = pyip.inputMenu(["No", "Yes"], prompt="Apply external loads?\n", lettered=True)
 
 if loads == "Yes":
@@ -263,13 +267,15 @@ for simplex in simplices:
 
 energies = []
 
+sleep(1)
 print("Starting the simulation physics and animation loops.")
-print("Leaping through the time dimension with Verlet method.")
+sleep(1)
+print("Leaping through the time dimension with Verlet method.\n")
 
-for t in range(2):
+for t in range(etime):
     for s in range(fps):
-        p = time / 2
-        print(f"Progress : {'-' * int(20 * p)}[:)]{'~' * int(20 * (1 - p))}", end="\r")
+        p = floor(20 * (time / etime))
+        print(f"Progress : {'-' * p}[:(|{'~' * (20 - p)} : Wait", end="\r")
         for i in range(ipf):
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
@@ -430,7 +436,8 @@ for t in range(2):
         surface.write_to_png(f"output/frames/{shot:05}.png")
         shot += 1
 
-print("Progress : Done                                   ")
+print(f"Progress : {'-' * 20}[:)| : Done\n")
+sleep(1)
 print("Assembling the video file using the contents of the frames folder.")
 ffmpeg.input("output/frames/%05d.png", framerate=fps).output("output/video.mp4").run(overwrite_output=True, quiet=True)
 
@@ -440,13 +447,14 @@ for file in files:
     remove(file)
 rmdir("output/frames")
 
+t = np.array(sensor.times)
+e = np.array(energies)
+
 if sensor is not None:
-    t = np.array(sensor.times)
     d = np.array(sensor.positions_x)
     v = np.array(sensor.velocities_x)
     a = np.array(sensor.accelerations_x)
     g = a / earth
-    e = np.array(energies)
 
     plt.style.use("dark_background")
     fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
