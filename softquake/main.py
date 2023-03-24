@@ -175,7 +175,7 @@ fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
 time = 0
-etime = 5
+etime = 1
 shot = 0
 
 earth = 9.8
@@ -257,18 +257,22 @@ for simplex in simplices:
 energies = []
 
 sleep(1)
-if not path.exists("output"):
-    print("Making the output folder.")
-    mkdir("output")
+try:
+    if not path.exists("output"):
+        print("Making the output folder.")
+        mkdir("output")
 
-if not path.exists("output/frames"):
-    print("Making the frames folder.")
-    mkdir("output/frames")
-elif path.isdir("output/frames"):
-    print("Removing the contents of the frames folder.")
-    files = glob("output/frames/*")
-    for file in files:
-        remove(file)
+    if not path.exists("output/frames"):
+        print("Making the frames folder.")
+        mkdir("output/frames")
+    elif path.isdir("output/frames"):
+        print("Removing the contents of the frames folder.")
+        files = glob("output/frames/*")
+        for file in files:
+            remove(file)
+except Exception:
+    print("Error creating output folder.")
+    raise Exception
 sleep(1)
 print("Starting the simulation physics and animation loops.")
 sleep(1)
@@ -277,7 +281,7 @@ print("Leaping through the time dimension with Verlet's method.\n")
 for t in range(etime):
     for s in range(fps):
         p = floor(20 * (time / etime))
-        print(f"Progress : {'-' * p}[:(|{'~' * (20 - p)} : Wait", end="\r")
+        print(f"Progress : {'-' * p}*{'~' * (20 - p)} : Wait", end="\r")
         for i in range(ipf):
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
@@ -323,131 +327,151 @@ for t in range(etime):
 
             time += delta
 
-        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1000, 1000)
-        context = cairo.Context(surface)
+        try:
+            surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1000, 1000)
+            context = cairo.Context(surface)
 
-        context.translate(0, 500)
-        context.scale(1, -1)
-        context.translate(0, -500)
+            context.translate(0, 500)
+            context.scale(1, -1)
+            context.translate(0, -500)
 
-        context.rectangle(0, 0, 1000, 1000)
-        context.set_source_rgb(0, 1, 1)
-        context.fill()
-
-        context.rectangle(0, 0, 1000, 200)
-        context.set_source_rgb(0, 1, 0)
-        context.fill()
-
-        context.scale(100, 100)
-        context.translate(5, 5)
-        context.translate(0, -4)
-
-        context.rectangle(plate.position.x - 0.5 * plate.width, plate.position.y - 0.5, plate.width, 0.5)
-        context.set_source_rgb(0.5, 0.25, 0.125)
-        context.fill_preserve()
-        context.set_line_width(0.1)
-        context.set_source_rgb(0, 0, 0)
-        context.stroke()
-
-        for triangle in triangles:
-            link1, link2, link3 = triangle[1][0], triangle[1][1], triangle[1][2]
-            natural_semi = 0.5 * (link1.length + link2.length + link3.length)
-            actual_semi = 0.5 * (link1.get_length() + link2.get_length() + link3.get_length())
-            natural_area = sqrt(natural_semi *
-                                (natural_semi - link1.length) *
-                                (natural_semi - link2.length) *
-                                (natural_semi - link3.length))
-            actual_area = sqrt(actual_semi *
-                               (actual_semi - link1.get_length()) *
-                               (actual_semi - link2.get_length()) *
-                               (actual_semi - link3.get_length()))
-            try:
-                ratio = actual_area / natural_area
-            except ZeroDivisionError:
-                ratio = 1
-
-            context.move_to(triangle[0][0].position.x, triangle[0][0].position.y)
-            context.line_to(triangle[0][1].position.x, triangle[0][1].position.y)
-            context.line_to(triangle[0][2].position.x, triangle[0][2].position.y)
-            context.close_path()
-            if ratio < 1:
-                context.set_source_rgb(1, min(max(20 * (ratio - 1) + 1, 0), 1), min(max(20 * (ratio - 1) + 1, 0), 1))
-            else:
-                context.set_source_rgb(min(max(20 * (1 - ratio) + 1, 0), 1), min(max(20 * (1 - ratio) + 1, 0), 1), 1)
+            context.rectangle(0, 0, 1000, 1000)
+            context.set_source_rgb(0, 1, 1)
             context.fill()
 
-        for link in links:
-            context.move_to(link.nodes[0].position.x, link.nodes[0].position.y)
-            context.line_to(link.nodes[1].position.x, link.nodes[1].position.y)
-            context.set_line_width(0.1)
-            context.set_source_rgb(0, 0, 0)
-            context.stroke()
+            context.rectangle(0, 0, 1000, 200)
+            context.set_source_rgb(0, 1, 0)
+            context.fill()
 
-        for node in nodes:
-            context.arc(node.position.x, node.position.y, 0.15, 0, tau)
-            context.set_source_rgb(1, 1, 1)
+            context.scale(100, 100)
+            context.translate(5, 5)
+            context.translate(0, -4)
+
+            context.rectangle(plate.position.x - 0.5 * plate.width, plate.position.y - 0.5, plate.width, 0.5)
+            context.set_source_rgb(0.5, 0.25, 0.125)
             context.fill_preserve()
             context.set_line_width(0.1)
             context.set_source_rgb(0, 0, 0)
             context.stroke()
 
-        for load in loads:
-            if load.force.len() < 1e-5:
-                continue
+            for triangle in triangles:
+                link1, link2, link3 = triangle[1][0], triangle[1][1], triangle[1][2]
+                natural_semi = 0.5 * (link1.length + link2.length + link3.length)
+                actual_semi = 0.5 * (link1.get_length() + link2.get_length() + link3.get_length())
+                natural_area = sqrt(natural_semi *
+                                    (natural_semi - link1.length) *
+                                    (natural_semi - link2.length) *
+                                    (natural_semi - link3.length))
+                actual_area = sqrt(actual_semi *
+                                   (actual_semi - link1.get_length()) *
+                                   (actual_semi - link2.get_length()) *
+                                   (actual_semi - link3.get_length()))
+                try:
+                    ratio = actual_area / natural_area
+                except ZeroDivisionError:
+                    ratio = 1
 
-            context.save()
-            context.translate(load.node.position.x, load.node.position.y)
-            context.rotate(atan2(-load.force.y, -load.force.x))
-            context.translate(0.3, 0)
-            context.move_to(0, 0)
-            context.line_to(0.3, 0.3)
-            context.line_to(0.3, 0.08)
-            context.line_to(0.9, 0.12)
-            context.line_to(0.9, -0.12)
-            context.line_to(0.3, -0.08)
-            context.line_to(0.3, -0.3)
-            context.close_path()
-            context.set_source_rgb(1, 1, 0)
-            context.fill_preserve()
-            context.set_line_width(0.1)
-            context.set_source_rgb(0, 0, 0)
-            context.stroke()
-            context.restore()
+                context.move_to(triangle[0][0].position.x, triangle[0][0].position.y)
+                context.line_to(triangle[0][1].position.x, triangle[0][1].position.y)
+                context.line_to(triangle[0][2].position.x, triangle[0][2].position.y)
+                context.close_path()
+                if ratio < 1:
+                    context.set_source_rgb(1, min(max(20 * (ratio - 1) + 1, 0), 1),
+                                           min(max(20 * (ratio - 1) + 1, 0), 1))
+                else:
+                    context.set_source_rgb(min(max(20 * (1 - ratio) + 1, 0), 1), min(max(20 * (1 - ratio) + 1, 0), 1),
+                                           1)
+                context.fill()
 
-        if sensor is not None:
-            context.save()
-            context.translate(sensor.node.position.x, sensor.node.position.y)
-            context.move_to(0.3, 0)
-            context.line_to(0, 0)
-            context.line_to(0, 0.3)
-            context.line_to(0, 0)
-            context.line_to(-0.3, 0)
-            context.line_to(0, 0)
-            context.line_to(0, -0.3)
-            context.line_to(0, 0)
-            context.line_to(0.3, 0)
-            context.arc(0, 0, 0.3, 0, tau)
-            context.set_line_width(0.2)
-            context.set_source_rgb(0, 0, 0)
-            context.stroke_preserve()
-            context.set_line_width(0.05)
-            context.set_source_rgb(1, 1, 0)
-            context.stroke()
-            context.restore()
+            for link in links:
+                context.move_to(link.nodes[0].position.x, link.nodes[0].position.y)
+                context.line_to(link.nodes[1].position.x, link.nodes[1].position.y)
+                context.set_line_width(0.1)
+                context.set_source_rgb(0, 0, 0)
+                context.stroke()
 
-        surface.write_to_png(f"output/frames/{shot:05}.png")
+            for node in nodes:
+                context.arc(node.position.x, node.position.y, 0.15, 0, tau)
+                context.set_source_rgb(1, 1, 1)
+                context.fill_preserve()
+                context.set_line_width(0.1)
+                context.set_source_rgb(0, 0, 0)
+                context.stroke()
+
+            for load in loads:
+                if load.force.len() < 1e-5:
+                    continue
+
+                context.save()
+                context.translate(load.node.position.x, load.node.position.y)
+                context.rotate(atan2(-load.force.y, -load.force.x))
+                context.translate(0.3, 0)
+                context.move_to(0, 0)
+                context.line_to(0.3, 0.3)
+                context.line_to(0.3, 0.08)
+                context.line_to(0.9, 0.12)
+                context.line_to(0.9, -0.12)
+                context.line_to(0.3, -0.08)
+                context.line_to(0.3, -0.3)
+                context.close_path()
+                context.set_source_rgb(1, 1, 0)
+                context.fill_preserve()
+                context.set_line_width(0.1)
+                context.set_source_rgb(0, 0, 0)
+                context.stroke()
+                context.restore()
+
+            if sensor is not None:
+                context.save()
+                context.translate(sensor.node.position.x, sensor.node.position.y)
+                context.move_to(0.3, 0)
+                context.line_to(0, 0)
+                context.line_to(0, 0.3)
+                context.line_to(0, 0)
+                context.line_to(-0.3, 0)
+                context.line_to(0, 0)
+                context.line_to(0, -0.3)
+                context.line_to(0, 0)
+                context.line_to(0.3, 0)
+                context.arc(0, 0, 0.3, 0, tau)
+                context.set_line_width(0.2)
+                context.set_source_rgb(0, 0, 0)
+                context.stroke_preserve()
+                context.set_line_width(0.05)
+                context.set_source_rgb(1, 1, 0)
+                context.stroke()
+                context.restore()
+
+            surface.write_to_png(f"output/frames/{shot:05}.png")
+            surface.finish()
+        except Exception:
+            print("Error rendering with Cairo graphics library.")
+            raise Exception
         shot += 1
 
-print(f"Progress : {'-' * 20}[:)| : Done")
+print(f"Progress : {'-' * 20}* : Done")
 sleep(1)
 print("\nAssembling the video file using the contents of the frames folder.")
-ffmpeg.input("output/frames/%05d.png", framerate=fps).output("output/video.mp4").run(overwrite_output=True, quiet=True)
+try:
+    (
+        ffmpeg.
+        input("output/frames/%05d.png", framerate=fps).
+        output("output/video.mp4").
+        run(overwrite_output=True, quiet=True)
+    )
+except Exception:
+    print("Error encoding with FFmpeg media library.")
+    raise Exception
 
 print("Removing the frames folder.")
-files = glob("output/frames/*")
-for file in files:
-    remove(file)
-rmdir("output/frames")
+try:
+    files = glob("output/frames/*")
+    for file in files:
+        remove(file)
+    rmdir("output/frames")
+except Exception:
+    print("Error deleting output folder.")
+    raise Exception
 
 sleep(1)
 print("Attempting signal processing on sensor data.")
@@ -459,37 +483,41 @@ a = np.array(sensor.accelerations_x)
 g = a / earth
 e = np.array(energies)
 
-plt.style.use("dark_background")
-fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
-fig1.suptitle("Horizontal kinematics of the \"sensor\" node in time")
-ax1.plot(t, d, color="red")
-ax1.set_xlabel("Time (s)")
-ax1.set_ylabel("Displacement (m)")
-ax2.plot(t, v, color="dodgerblue")
-ax2.set_xlabel("Time (s)")
-ax2.set_ylabel("Velocity (m/s)")
-ax3.plot(t, a, color="magenta")
-ax3.set_xlabel("Time (s)")
-ax3.set_ylabel("Acceleration (m/s/s)")
+try:
+    plt.style.use("dark_background")
+    fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
+    fig1.suptitle("Horizontal kinematics of the \"sensor\" node in time")
+    ax1.plot(t, d, color="red")
+    ax1.set_xlabel("Time (s)")
+    ax1.set_ylabel("Displacement (m)")
+    ax2.plot(t, v, color="dodgerblue")
+    ax2.set_xlabel("Time (s)")
+    ax2.set_ylabel("Velocity (m/s)")
+    ax3.plot(t, a, color="magenta")
+    ax3.set_xlabel("Time (s)")
+    ax3.set_ylabel("Acceleration (m/s/s)")
 
-fig2, ax4 = plt.subplots()
-spectrogram = ax4.specgram(np.abs(a[::100]), NFFT=32, Fs=1 / (100 * delta), noverlap=20, cmap="inferno")[3]
-colorbar = fig2.colorbar(spectrogram, ax=ax4)
-ax4.set_title(
-    "Spectrogram of power spectral density of \n horizontal acceleration magnitude of the \"sensor\" node")
-ax4.set_xlabel("Time (s)")
-ax4.set_ylabel("Frequency (Hz)")
-colorbar.set_label("PSD of Acceleration")
+    fig2, ax4 = plt.subplots()
+    spectrogram = ax4.specgram(np.abs(a[::100]), NFFT=32, Fs=1 / (100 * delta), noverlap=20, cmap="inferno")[3]
+    colorbar = fig2.colorbar(spectrogram, ax=ax4)
+    ax4.set_title(
+        "Spectrogram of power spectral density of \n horizontal acceleration magnitude of the \"sensor\" node")
+    ax4.set_xlabel("Time (s)")
+    ax4.set_ylabel("Frequency (Hz)")
+    colorbar.set_label("PSD of Acceleration")
 
-fig3, ax5 = plt.subplots()
-ax5.set_title("Combined elastic potential and kinetic energy.")
-ax5.plot(t, e, color="yellow")
-ax5.set_xlabel("Time (s)")
-ax5.set_ylabel("Energy (J)")
-fig3.savefig("output/figure3.png")
+    fig3, ax5 = plt.subplots()
+    ax5.set_title("Combined elastic potential and kinetic energy.")
+    ax5.plot(t, e, color="yellow")
+    ax5.set_xlabel("Time (s)")
+    ax5.set_ylabel("Energy (J)")
+    fig3.savefig("output/figure3.png")
 
-sleep(1)
-print("Making the figures.")
-fig1.savefig("output/figure1.png")
-fig2.savefig("output/figure2.png")
-fig3.savefig("output/figure3.png")
+    sleep(1)
+    print("Making the figures.")
+    fig1.savefig("output/figure1.png")
+    fig2.savefig("output/figure2.png")
+    fig3.savefig("output/figure3.png")
+except Exception:
+    print("Error saving graphs with matplotlib plotting library.")
+    raise Exception
