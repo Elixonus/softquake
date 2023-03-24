@@ -12,21 +12,6 @@ from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
 
-if not path.exists("output"):
-    print("Making the output folder.")
-    mkdir("output")
-
-if not path.exists("output/frames"):
-    print("Making the frames folder.")
-    mkdir("output/frames")
-elif path.isdir("output/frames"):
-    print("Removing the contents of the frames folder.")
-    files = glob("output/frames/*")
-    for file in files:
-        remove(file)
-
-
-sleep(1)
 structure = pyip.inputMenu(["Box", "House"], prompt="Select a softbody structure preset:\n", lettered=True)
 print("Approximate Topology Diagram")
 
@@ -272,9 +257,22 @@ for simplex in simplices:
 energies = []
 
 sleep(1)
+if not path.exists("output"):
+    print("Making the output folder.")
+    mkdir("output")
+
+if not path.exists("output/frames"):
+    print("Making the frames folder.")
+    mkdir("output/frames")
+elif path.isdir("output/frames"):
+    print("Removing the contents of the frames folder.")
+    files = glob("output/frames/*")
+    for file in files:
+        remove(file)
+sleep(1)
 print("Starting the simulation physics and animation loops.")
 sleep(1)
-print("Leaping through the time dimension with Verlet method.\n")
+print("Leaping through the time dimension with Verlet's method.\n")
 
 for t in range(etime):
     for s in range(fps):
@@ -440,9 +438,9 @@ for t in range(etime):
         surface.write_to_png(f"output/frames/{shot:05}.png")
         shot += 1
 
-print(f"Progress : {'-' * 20}[:)| : Done\n")
+print(f"Progress : {'-' * 20}[:)| : Done")
 sleep(1)
-print("Assembling the video file using the contents of the frames folder.")
+print("\nAssembling the video file using the contents of the frames folder.")
 ffmpeg.input("output/frames/%05d.png", framerate=fps).output("output/video.mp4").run(overwrite_output=True, quiet=True)
 
 print("Removing the frames folder.")
@@ -451,42 +449,47 @@ for file in files:
     remove(file)
 rmdir("output/frames")
 
+sleep(1)
+print("Attempting signal processing on sensor data.")
+
 t = np.array(sensor.times)
+d = np.array(sensor.positions_x)
+v = np.array(sensor.velocities_x)
+a = np.array(sensor.accelerations_x)
+g = a / earth
 e = np.array(energies)
 
-if sensor is not None:
-    d = np.array(sensor.positions_x)
-    v = np.array(sensor.velocities_x)
-    a = np.array(sensor.accelerations_x)
-    g = a / earth
+plt.style.use("dark_background")
+fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
+fig1.suptitle("Horizontal kinematics of the \"sensor\" node in time")
+ax1.plot(t, d, color="red")
+ax1.set_xlabel("Time (s)")
+ax1.set_ylabel("Displacement (m)")
+ax2.plot(t, v, color="dodgerblue")
+ax2.set_xlabel("Time (s)")
+ax2.set_ylabel("Velocity (m/s)")
+ax3.plot(t, a, color="magenta")
+ax3.set_xlabel("Time (s)")
+ax3.set_ylabel("Acceleration (m/s/s)")
 
-    plt.style.use("dark_background")
-    fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
-    fig1.suptitle("Horizontal kinematics of the \"sensor\" node in time")
-    ax1.plot(t, d, color="red")
-    ax1.set_xlabel("Time (s)")
-    ax1.set_ylabel("Displacement (m)")
-    ax2.plot(t, v, color="dodgerblue")
-    ax2.set_xlabel("Time (s)")
-    ax2.set_ylabel("Velocity (m/s)")
-    ax3.plot(t, a, color="magenta")
-    ax3.set_xlabel("Time (s)")
-    ax3.set_ylabel("Acceleration (m/s/s)")
-    fig1.savefig("output/figure1.png")
-
-    fig2, ax4 = plt.subplots()
-    spectrogram = ax4.specgram(np.abs(a[::100]), NFFT=32, Fs=1 / (100 * delta), noverlap=20, cmap="inferno")[3]
-    colorbar = fig2.colorbar(spectrogram, ax=ax4)
-    ax4.set_title(
-        "Spectrogram of power spectral density of \n horizontal acceleration magnitude of the \"sensor\" node")
-    ax4.set_xlabel("Time (s)")
-    ax4.set_ylabel("Frequency (Hz)")
-    colorbar.set_label("PSD of Acceleration")
-    fig2.savefig("output/figure2.png")
+fig2, ax4 = plt.subplots()
+spectrogram = ax4.specgram(np.abs(a[::100]), NFFT=32, Fs=1 / (100 * delta), noverlap=20, cmap="inferno")[3]
+colorbar = fig2.colorbar(spectrogram, ax=ax4)
+ax4.set_title(
+    "Spectrogram of power spectral density of \n horizontal acceleration magnitude of the \"sensor\" node")
+ax4.set_xlabel("Time (s)")
+ax4.set_ylabel("Frequency (Hz)")
+colorbar.set_label("PSD of Acceleration")
 
 fig3, ax5 = plt.subplots()
 ax5.set_title("Combined elastic potential and kinetic energy.")
 ax5.plot(t, e, color="yellow")
 ax5.set_xlabel("Time (s)")
 ax5.set_ylabel("Energy (J)")
+fig3.savefig("output/figure3.png")
+
+sleep(1)
+print("Making the figures.")
+fig1.savefig("output/figure1.png")
+fig2.savefig("output/figure2.png")
 fig3.savefig("output/figure3.png")
