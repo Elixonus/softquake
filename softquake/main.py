@@ -13,7 +13,7 @@ from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
 
-structure = pyip.inputMenu(["Box", "House"], prompt="Select a softbody structure preset:\n", lettered=True)
+structure = pyip.inputMenu(["Box", "House", "Bridge"], prompt="Select a softbody structure preset:\n", lettered=True)
 print("Approximate Topology Diagram")
 
 if structure == "Box":
@@ -108,6 +108,13 @@ elif structure == "House":
         [0.5, 6],
         [0, 7],
     ])
+elif structure == "Bridge":
+    points = np.array([
+        [-3, 0],
+        [-2, 0],
+        [2, 0],
+        [3, 0]
+    ])
 else:
     points = np.array([])
 
@@ -146,47 +153,55 @@ print(
 )
 
 sleep(1)
-choices_frequency = ["Low (0.2 hz)", "Medium (2 hz)", "High (10 hz)", "Custom"]
-frequency = pyip.inputMenu(choices_frequency,
+frequency = pyip.inputMenu(["Low", "Medium", "High", "Custom"],
                            prompt="Select the plate horizontal vibration signal by frequency:\n",
                            lettered=True)
 amplitude = 0
+phase = 0
 
-if frequency == choices_frequency[0]:
+if frequency == "Low":
     frequency = 0.2
     amplitude = 2
-elif frequency == choices_frequency[1]:
+elif frequency == "Medium":
     frequency = 2
     amplitude = 0.2
-elif frequency == choices_frequency[2]:
+elif frequency == "High":
     frequency = 10
     amplitude = 0.05
-elif frequency == choices_frequency[3]:
+elif frequency == "Custom":
     frequency = []
     amplitude = []
-    path = pyip.inputFilepath(prompt="Enter a CSV file with \"frequencies and amplitudes\" format:\n", mustExist=True)
-    with open(path, newline="") as file:
-        reader = csv.reader(file, delimiter=",", quoting=csv.QUOTE_NONE)
-        next(reader)
-        for row in reader:
-            frequency.append(float(row[0]))
-            amplitude.append(float(row[1]))
+    phase = []
+    fpath = pyip.inputFilepath(
+        prompt="Enter a CSV file with \"frequencies, amplitudes and phases\" format:\nFile: ",
+        mustExist=True
+    )
+    try:
+        with open(fpath, newline="") as file:
+            reader = csv.reader(file, delimiter=",", quoting=csv.QUOTE_NONE)
+            next(reader)
+            try:
+                for row in reader:
+                    frequency.append(float(row[0]))
+                    amplitude.append(float(row[1]))
+                    phase.append(float(row[2]))
+            except Exception:
+                print("Error reading the data in the CSV file.")
+                raise Exception
+    except Exception:
+        print("Error reading the CSV file.")
+        raise Exception
 else:
     frequency = 0
 
-if frequency is not list:
+if type(frequency) is not list:
     print("Plate Vibration Diagram")
     print(
         fr"""
            ._________.    : {frequency:.2f} Hz
         <--|_________|--> : {amplitude:.2f} m
-
         """
     )
-else:
-    print(frequency)
-    print(amplitude)
-
 fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
@@ -204,7 +219,16 @@ if structure == "Box":
 elif structure == "House":
     plate.width = 5
 
-sines = [Sine(frequency=frequency, amplitude=amplitude)]
+sines = []
+
+if type(frequency) is not list:
+    sine = Sine(frequency=frequency, amplitude=amplitude)
+    sines.append(sine)
+else:
+    sines = []
+    for f, a in zip(frequency, amplitude):
+        sine = Sine(frequency=f, amplitude=a)
+        sines.append(sine)
 
 plate.sines = sines
 
@@ -247,8 +271,12 @@ elif structure == "House":
 else:
     sensor = None
 
-delaunay = Delaunay(points)
-simplices = delaunay.simplices
+try:
+    delaunay = Delaunay(points)
+    simplices = delaunay.simplices
+except Exception:
+    print("Error computing the Delaunay triangulation.")
+    raise Exception
 
 links = []
 triangles = []
