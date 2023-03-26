@@ -1,6 +1,7 @@
 from math import tau, sqrt, atan2, floor
 from os import path, mkdir, rmdir, remove
 from glob import glob
+import csv
 from time import sleep
 import cairo
 import ffmpeg
@@ -111,7 +112,7 @@ else:
     points = np.array([])
 
 sleep(1)
-stiffness = pyip.inputMenu(["Low", "High"], prompt="Select the spring stiffness:\n", lettered=True)
+stiffness = pyip.inputMenu(["Low", "High"], prompt="Select the spring stiffness coefficient:\n", lettered=True)
 
 if stiffness == "Low":
     stiffness = 2e6
@@ -128,7 +129,7 @@ print(
 )
 
 sleep(1)
-dampening = pyip.inputMenu(["Low", "High"], prompt="Select the spring dampening:\n", lettered=True)
+dampening = pyip.inputMenu(["Low", "High"], prompt="Select the spring dampening coefficient:\n", lettered=True)
 
 if dampening == "Low":
     dampening = 1e3
@@ -145,37 +146,52 @@ print(
 )
 
 sleep(1)
-frequency = pyip.inputMenu(["Low", "Medium", "High"],
-                           prompt="Select the plate horizontal vibration frequency:\n",
+choices_frequency = ["Low (0.2 hz)", "Medium (2 hz)", "High (10 hz)", "Custom"]
+frequency = pyip.inputMenu(choices_frequency,
+                           prompt="Select the plate horizontal vibration signal by frequency:\n",
                            lettered=True)
+amplitude = 0
 
-if frequency == "Low":
+if frequency == choices_frequency[0]:
     frequency = 0.2
     amplitude = 2
-elif frequency == "Medium":
+elif frequency == choices_frequency[1]:
     frequency = 2
     amplitude = 0.2
-elif frequency == "High":
+elif frequency == choices_frequency[2]:
     frequency = 10
     amplitude = 0.05
+elif frequency == choices_frequency[3]:
+    frequency = []
+    amplitude = []
+    path = pyip.inputFilepath(prompt="Enter a CSV file with \"frequencies and amplitudes\" format:\n", mustExist=True)
+    with open(path, newline="") as file:
+        reader = csv.reader(file, delimiter=",", quoting=csv.QUOTE_NONE)
+        next(reader)
+        for row in reader:
+            frequency.append(float(row[0]))
+            amplitude.append(float(row[1]))
 else:
     frequency = 0
-    amplitude = 0
 
-print("Plate Vibration Diagram")
-print(
-    fr"""
-       ,_________,    : {frequency:.2f} Hz
-    <--|_________|--> : {amplitude:.2f} m
-    
-    """
-)
+if frequency is not list:
+    print("Plate Vibration Diagram")
+    print(
+        fr"""
+           ._________.    : {frequency:.2f} Hz
+        <--|_________|--> : {amplitude:.2f} m
+
+        """
+    )
+else:
+    print(frequency)
+    print(amplitude)
 
 fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
 time = 0
-etime = 1
+etime = 10
 shot = 0
 
 earth = 9.8
