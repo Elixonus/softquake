@@ -13,7 +13,7 @@ from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
 
-structure = pyip.inputMenu(["Box", "House", "Bridge"], prompt="Select a softbody structure preset:\n", lettered=True)
+structure = pyip.inputMenu(["Box", "House", "Rhombus"], prompt="Select a softbody structure preset:\n", lettered=True)
 print("Approximate Topology Diagram")
 
 if structure == "Box":
@@ -65,7 +65,7 @@ elif structure == "House":
              / \
             O:-:O
            / \ / \
-          O--:O:--O
+          O:-:O:-:O
          / \ / \ / \
         O:-'O'-:O:-'O
         | \ | / | \ |
@@ -108,17 +108,52 @@ elif structure == "House":
         [0.5, 6],
         [0, 7],
     ])
-elif structure == "Bridge":
+elif structure == "Rhombus":
+    print(
+        r"""
+              O
+             / \
+            O:-:O
+           / \ / \
+          O:-:O:-:O
+         / \ / \ / \
+        O:-:O:-:O:-:O
+         \ / \ / \ /
+          O:-:O:-:O
+           \ / \ /
+            O'-'O
+        """
+    )
     points = np.array([
-        [-3, 0],
-        [-2, 0],
-        [2, 0],
-        [3, 0]
+        [-0.5, 0],
+        [0.5, 0],
+        [-1, 1],
+        [0, 1],
+        [1, 1],
+        [-1.5, 2],
+        [-0.5, 2],
+        [0.5, 2],
+        [1.5, 2],
+        [-2, 3],
+        [-1, 3],
+        [0, 3],
+        [1, 3],
+        [2, 3],
+        [-1.5, 4],
+        [-0.5, 4],
+        [0.5, 4],
+        [1.5, 4],
+        [-1, 5],
+        [0, 5],
+        [1, 5],
+        [-0.5, 6],
+        [0.5, 6],
+        [0, 7],
     ])
 else:
     points = np.array([])
 
-sleep(1)
+sleep(0.5)
 stiffness = pyip.inputMenu(["Low", "High"], prompt="Select the spring stiffness coefficient:\n", lettered=True)
 
 if stiffness == "Low":
@@ -135,7 +170,7 @@ print(
     """
 )
 
-sleep(1)
+sleep(0.5)
 dampening = pyip.inputMenu(["Low", "High"], prompt="Select the spring dampening coefficient:\n", lettered=True)
 
 if dampening == "Low":
@@ -152,7 +187,7 @@ print(
     """
 )
 
-sleep(1)
+sleep(0.5)
 frequency = pyip.inputMenu(["Low", "Medium", "High", "Custom"],
                            prompt="Select the plate horizontal vibration signal by frequency:\n",
                            lettered=True)
@@ -206,7 +241,7 @@ fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
 time = 0
-etime = 10
+etime = 5
 shot = 0
 
 earth = 9.8
@@ -218,6 +253,8 @@ if structure == "Box":
     plate.width = 4
 elif structure == "House":
     plate.width = 5
+elif structure == "Rhombus":
+    plate.width = 2
 
 sines = []
 
@@ -242,11 +279,13 @@ if structure == "Box":
     plate.nodes.extend(nodes[0:3])
 elif structure == "House":
     plate.nodes.extend(nodes[0:5])
+elif structure == "Rhombus":
+    plate.nodes.extend(nodes[0:2])
 
 plate.set_kinematics(time)
 plate.set_nodes(0.8)
 
-sleep(1)
+sleep(0.5)
 loads = pyip.inputMenu(["No", "Yes"], prompt="Apply external loads?\n", lettered=True)
 
 if loads == "Yes":
@@ -261,6 +300,9 @@ if loads == "Yes":
                       Load(node=nodes[21], force=Vector(20000, 0))])
     elif structure == "House":
         loads.extend([Load(node=nodes[-1], force=Vector(120000, 0))])
+    elif structure == "Rhombus":
+        loads.extend([Load(node=nodes[-4], force=Vector(0, -60000)),
+                      Load(node=nodes[-6], force=Vector(0, -60000))])
 else:
     loads = []
 
@@ -268,6 +310,8 @@ if structure == "Box":
     sensor = Sensor(node=nodes[-2])
 elif structure == "House":
     sensor = Sensor(node=nodes[-4])
+elif structure == "Rhombus":
+    sensor = Sensor(node=nodes[-1])
 else:
     sensor = None
 
@@ -281,26 +325,31 @@ except Exception:
 links = []
 triangles = []
 
-for simplex in simplices:
-    def add_link_maybe(n1, n2):
-        for linkm in links:
-            if ((linkm.nodes[0] == nodes[n1] and linkm.nodes[1] == nodes[n2]) or
-                    (linkm.nodes[0] == nodes[n2] and linkm.nodes[1] == nodes[n1])):
-                return linkm
-        linkm = Link(nodes=(nodes[n1], nodes[n2]), stiffness=stiffness, dampening=dampening)
-        links.append(linkm)
-        return linkm
+try:
+    for simplex in simplices:
+        def add_link_maybe(n1, n2):
+            for linkm in links:
+                if ((linkm.nodes[0] == nodes[n1] and linkm.nodes[1] == nodes[n2]) or
+                        (linkm.nodes[0] == nodes[n2] and linkm.nodes[1] == nodes[n1])):
+                    return linkm
+            linkm = Link(nodes=(nodes[n1], nodes[n2]), stiffness=stiffness, dampening=dampening)
+            links.append(linkm)
+            return linkm
 
-    link1 = add_link_maybe(simplex[0], simplex[1])
-    link2 = add_link_maybe(simplex[1], simplex[2])
-    link3 = add_link_maybe(simplex[2], simplex[0])
 
-    triangle = ([nodes[simplex[0]], nodes[simplex[1]], nodes[simplex[2]]], [link1, link2, link3])
-    triangles.append(triangle)
+        link1 = add_link_maybe(simplex[0], simplex[1])
+        link2 = add_link_maybe(simplex[1], simplex[2])
+        link3 = add_link_maybe(simplex[2], simplex[0])
+
+        triangle = ([nodes[simplex[0]], nodes[simplex[1]], nodes[simplex[2]]], [link1, link2, link3])
+        triangles.append(triangle)
+except Exception:
+    print("Error finding the simplices in the selected structure.")
+    raise Exception
 
 energies = []
 
-sleep(1)
+sleep(0.5)
 try:
     if not path.exists("output"):
         print("Making the output folder.")
@@ -317,9 +366,9 @@ try:
 except Exception:
     print("Error creating output folder.")
     raise Exception
-sleep(1)
+sleep(0.5)
 print("Starting the simulation physics and animation loops.")
-sleep(1)
+sleep(0.5)
 print("Leaping through the time dimension with Verlet's method.\n")
 
 for t in range(etime):
@@ -494,7 +543,7 @@ for t in range(etime):
         shot += 1
 
 print(f"Progress : {'-' * 20}* : Done")
-sleep(1)
+sleep(0.5)
 print("\nAssembling the video file using the contents of the frames folder.")
 try:
     (
@@ -517,7 +566,7 @@ except Exception:
     print("Error deleting output folder.")
     raise Exception
 
-sleep(1)
+sleep(0.5)
 print("Attempting signal processing on sensor data.")
 
 t = np.array(sensor.times)
@@ -557,7 +606,7 @@ try:
     ax5.set_ylabel("Energy (J)")
     fig3.savefig("output/figure3.png")
 
-    sleep(1)
+    sleep(0.5)
     print("Making the figures.")
     fig1.savefig("output/figure1.png")
     fig2.savefig("output/figure2.png")
