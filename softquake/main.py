@@ -1,7 +1,6 @@
 from math import tau, sqrt, atan2, floor
 from os import path, mkdir, rmdir, remove
 from glob import glob
-import csv
 from time import sleep
 import cairo
 import ffmpeg
@@ -188,11 +187,10 @@ print(
 )
 
 sleep(0.5)
-frequency = pyip.inputMenu(["Low", "Medium", "High", "Custom"],
+frequency = pyip.inputMenu(["Low", "Medium", "High"],
                            prompt="Select the plate horizontal vibration signal by frequency:\n",
                            lettered=True)
 amplitude = 0
-phase = 0
 
 if frequency == "Low":
     frequency = 0.2
@@ -203,40 +201,17 @@ elif frequency == "Medium":
 elif frequency == "High":
     frequency = 10
     amplitude = 0.05
-elif frequency == "Custom":
-    frequency = []
-    amplitude = []
-    phase = []
-    fpath = pyip.inputFilepath(
-        prompt="Enter a CSV file with \"frequencies, amplitudes and phases\" format:\nFile: ",
-        mustExist=True
-    )
-    try:
-        with open(fpath, newline="") as file:
-            reader = csv.reader(file, delimiter=",", quoting=csv.QUOTE_NONE)
-            next(reader)
-            try:
-                for row in reader:
-                    frequency.append(float(row[0]))
-                    amplitude.append(float(row[1]))
-                    phase.append(float(row[2]))
-            except Exception:
-                print("Error reading the data in the CSV file.")
-                raise Exception
-    except Exception:
-        print("Error reading the CSV file.")
-        raise Exception
 else:
     frequency = 0
 
-if type(frequency) is not list:
-    print("Plate Vibration Diagram")
-    print(
-        fr"""
-           ._________.    : {frequency:.2f} Hz
-        <--|_________|--> : {amplitude:.2f} m
-        """
-    )
+print("Plate Vibration Diagram")
+print(
+    fr"""
+       ._________.    : {frequency:.2f} Hz
+    <--|_________|--> : {amplitude:.2f} m
+    """
+)
+
 fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
