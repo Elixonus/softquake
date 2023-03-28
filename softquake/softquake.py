@@ -83,3 +83,9 @@ class Sensor:
         self.positions_x.append(self.node.position.x)
         self.velocities_x.append(self.node.velocity.x)
         self.accelerations_x.append(self.node.acceleration.x)
+
+
+if __name__ == "__main__":
+    from time import sleep
+    print("This program is just a library file and is not meant to be executed directly.")
+    sleep(5)

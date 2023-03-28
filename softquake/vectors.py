@@ -124,3 +124,9 @@ class Vector:
     def copy(self) -> Vector:
         """Copy the vector instance."""
         return Vector(self.x, self.y)
+
+
+if __name__ == "__main__":
+    from time import sleep
+    print("This program is just a library file and is not meant to be executed directly.")
+    sleep(5)

@@ -82,3 +82,9 @@ class Link:
     def get_force(self) -> float:
         """Get the spring force expansion/contraction (positive/negative)."""
         return self.get_stiffness_force() + self.get_dampening_force()
+
+
+if __name__ == "__main__":
+    from time import sleep
+    print("This program is just a library file and is not meant to be executed directly.")
+    sleep(5)
