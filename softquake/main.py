@@ -569,7 +569,7 @@ try:
     spectrogram = ax4.specgram(np.abs(a[::100]), NFFT=32, Fs=1 / (100 * delta), noverlap=20, cmap="inferno")[3]
     colorbar = fig2.colorbar(spectrogram, ax=ax4)
     ax4.set_title(
-        "Spectrogram of power spectral density of \n horizontal acceleration magnitude of the \"sensor\" node")
+        "Spectrogram of power spectral density of\nhorizontal acceleration magnitude of the \"sensor\" node")
     ax4.set_xlabel("Time (s)")
     ax4.set_ylabel("Frequency (Hz)")
     colorbar.set_label("PSD of Acceleration")
