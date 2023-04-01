@@ -12,7 +12,11 @@ from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
 
-structure = pyip.inputMenu(["Box", "House", "Rhombus"], prompt="Select a softbody structure preset:\n", lettered=True)
+structure = pyip.inputMenu(
+    ["Box", "House", "Rhombus"],
+    prompt="Select a softbody structure preset:\n",
+    lettered=True,
+)
 print("Approximate Topology Diagram")
 
 if structure == "Box":
@@ -31,32 +35,34 @@ if structure == "Box":
         O'--O--'O
         """
     )
-    points = np.array([
-        [-1, 0],
-        [0, 0],
-        [1, 0],
-        [-1, 1],
-        [0, 1],
-        [1, 1],
-        [-1, 2],
-        [0, 2],
-        [1, 2],
-        [-1, 3],
-        [0, 3],
-        [1, 3],
-        [-1, 4],
-        [0, 4],
-        [1, 4],
-        [-1, 5],
-        [0, 5],
-        [1, 5],
-        [-1, 6],
-        [0, 6],
-        [1, 6],
-        [-1, 7],
-        [0, 7],
-        [1, 7],
-    ])
+    points = np.array(
+        [
+            [-1, 0],
+            [0, 0],
+            [1, 0],
+            [-1, 1],
+            [0, 1],
+            [1, 1],
+            [-1, 2],
+            [0, 2],
+            [1, 2],
+            [-1, 3],
+            [0, 3],
+            [1, 3],
+            [-1, 4],
+            [0, 4],
+            [1, 4],
+            [-1, 5],
+            [0, 5],
+            [1, 5],
+            [-1, 6],
+            [0, 6],
+            [1, 6],
+            [-1, 7],
+            [0, 7],
+            [1, 7],
+        ]
+    )
 elif structure == "House":
     print(
         r"""
@@ -75,38 +81,40 @@ elif structure == "House":
         O--'O'--O--'O
         """
     )
-    points = np.array([
-        [-2, 0],
-        [-1, 0],
-        [0, 0],
-        [1, 0],
-        [2, 0],
-        [-2, 1],
-        [-1, 1],
-        [0, 1],
-        [1, 1],
-        [2, 1],
-        [-2, 2],
-        [-1, 2],
-        [0, 2],
-        [1, 2],
-        [2, 2],
-        [-2, 3],
-        [-1, 3],
-        [0, 3],
-        [1, 3],
-        [2, 3],
-        [-1.5, 4],
-        [-0.5, 4],
-        [0.5, 4],
-        [1.5, 4],
-        [-1, 5],
-        [0, 5],
-        [1, 5],
-        [-0.5, 6],
-        [0.5, 6],
-        [0, 7],
-    ])
+    points = np.array(
+        [
+            [-2, 0],
+            [-1, 0],
+            [0, 0],
+            [1, 0],
+            [2, 0],
+            [-2, 1],
+            [-1, 1],
+            [0, 1],
+            [1, 1],
+            [2, 1],
+            [-2, 2],
+            [-1, 2],
+            [0, 2],
+            [1, 2],
+            [2, 2],
+            [-2, 3],
+            [-1, 3],
+            [0, 3],
+            [1, 3],
+            [2, 3],
+            [-1.5, 4],
+            [-0.5, 4],
+            [0.5, 4],
+            [1.5, 4],
+            [-1, 5],
+            [0, 5],
+            [1, 5],
+            [-0.5, 6],
+            [0.5, 6],
+            [0, 7],
+        ]
+    )
 elif structure == "Rhombus":
     print(
         r"""
@@ -123,37 +131,41 @@ elif structure == "Rhombus":
             O'-'O
         """
     )
-    points = np.array([
-        [-0.5, 0],
-        [0.5, 0],
-        [-1, 1],
-        [0, 1],
-        [1, 1],
-        [-1.5, 2],
-        [-0.5, 2],
-        [0.5, 2],
-        [1.5, 2],
-        [-2, 3],
-        [-1, 3],
-        [0, 3],
-        [1, 3],
-        [2, 3],
-        [-1.5, 4],
-        [-0.5, 4],
-        [0.5, 4],
-        [1.5, 4],
-        [-1, 5],
-        [0, 5],
-        [1, 5],
-        [-0.5, 6],
-        [0.5, 6],
-        [0, 7],
-    ])
+    points = np.array(
+        [
+            [-0.5, 0],
+            [0.5, 0],
+            [-1, 1],
+            [0, 1],
+            [1, 1],
+            [-1.5, 2],
+            [-0.5, 2],
+            [0.5, 2],
+            [1.5, 2],
+            [-2, 3],
+            [-1, 3],
+            [0, 3],
+            [1, 3],
+            [2, 3],
+            [-1.5, 4],
+            [-0.5, 4],
+            [0.5, 4],
+            [1.5, 4],
+            [-1, 5],
+            [0, 5],
+            [1, 5],
+            [-0.5, 6],
+            [0.5, 6],
+            [0, 7],
+        ]
+    )
 else:
     points = np.array([])
 
 sleep(0.5)
-stiffness = pyip.inputMenu(["Low", "High"], prompt="Select the spring stiffness coefficient:\n", lettered=True)
+stiffness = pyip.inputMenu(
+    ["Low", "High"], prompt="Select the spring stiffness coefficient:\n", lettered=True
+)
 
 if stiffness == "Low":
     stiffness = 2e6
@@ -164,13 +176,15 @@ else:
 
 print("Spring Stiffness Diagram")
 print(
-    fr"""
+    rf"""
     D---^\/\/\/\/\/\/^---O : {stiffness:.2e} N/m
     """
 )
 
 sleep(0.5)
-dampening = pyip.inputMenu(["Low", "High"], prompt="Select the spring dampening coefficient:\n", lettered=True)
+dampening = pyip.inputMenu(
+    ["Low", "High"], prompt="Select the spring dampening coefficient:\n", lettered=True
+)
 
 if dampening == "Low":
     dampening = 1e3
@@ -181,32 +195,34 @@ else:
 
 print("Spring Dampening Diagram")
 print(
-    fr"""
+    rf"""
     D--------[::|--------O : {dampening:.2e} N*s/m
     """
 )
 
 sleep(0.5)
-frequency = pyip.inputMenu(["Low", "Medium", "High"],
-                           prompt="Select the plate horizontal vibration signal by frequency:\n",
-                           lettered=True)
-amplitude = 0.
+frequency = pyip.inputMenu(
+    ["Low", "Medium", "High"],
+    prompt="Select the plate horizontal vibration signal by frequency:\n",
+    lettered=True,
+)
+amplitude = 0.0
 
 if frequency == "Low":
     frequency = 0.2
-    amplitude = 2.
+    amplitude = 2.0
 elif frequency == "Medium":
-    frequency = 2.
+    frequency = 2.0
     amplitude = 0.2
 elif frequency == "High":
-    frequency = 10.
+    frequency = 10.0
     amplitude = 0.05
 else:
     frequency = 0
 
 print("Plate Vibration Diagram")
 print(
-    fr"""
+    rf"""
        ._________.    : {frequency:.2f} Hz
     <--|_________|--> : {amplitude:.2f} m
     """
@@ -215,7 +231,7 @@ print(
 fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
-time = 0.
+time = 0.0
 etime = 5
 shot = 0
 
@@ -257,18 +273,26 @@ loads = pyip.inputMenu(["No", "Yes"], prompt="Apply external loads?\n", lettered
 if loads == "Yes":
     loads = []
     if structure == "Box":
-        loads.extend([Load(node=nodes[3], force=Vector(20000, 0)),
-                      Load(node=nodes[6], force=Vector(20000, 0)),
-                      Load(node=nodes[9], force=Vector(20000, 0)),
-                      Load(node=nodes[12], force=Vector(20000, 0)),
-                      Load(node=nodes[15], force=Vector(20000, 0)),
-                      Load(node=nodes[18], force=Vector(20000, 0)),
-                      Load(node=nodes[21], force=Vector(20000, 0))])
+        loads.extend(
+            [
+                Load(node=nodes[3], force=Vector(20000, 0)),
+                Load(node=nodes[6], force=Vector(20000, 0)),
+                Load(node=nodes[9], force=Vector(20000, 0)),
+                Load(node=nodes[12], force=Vector(20000, 0)),
+                Load(node=nodes[15], force=Vector(20000, 0)),
+                Load(node=nodes[18], force=Vector(20000, 0)),
+                Load(node=nodes[21], force=Vector(20000, 0)),
+            ]
+        )
     elif structure == "House":
         loads.extend([Load(node=nodes[-1], force=Vector(120000, 0))])
     elif structure == "Rhombus":
-        loads.extend([Load(node=nodes[-4], force=Vector(0, -60000)),
-                      Load(node=nodes[-6], force=Vector(0, -60000))])
+        loads.extend(
+            [
+                Load(node=nodes[-4], force=Vector(0, -60000)),
+                Load(node=nodes[-6], force=Vector(0, -60000)),
+            ]
+        )
 else:
     loads = []
 
@@ -293,21 +317,27 @@ triangles = []
 
 try:
     for simplex in simplices:
+
         def add_link_maybe(n1, n2):
             for linkm in links:
-                if ((linkm.nodes[0] == nodes[n1] and linkm.nodes[1] == nodes[n2]) or
-                        (linkm.nodes[0] == nodes[n2] and linkm.nodes[1] == nodes[n1])):
+                if (linkm.nodes[0] == nodes[n1] and linkm.nodes[1] == nodes[n2]) or (
+                    linkm.nodes[0] == nodes[n2] and linkm.nodes[1] == nodes[n1]
+                ):
                     return linkm
-            linkm = Link(nodes=(nodes[n1], nodes[n2]), stiffness=stiffness, dampening=dampening)
+            linkm = Link(
+                nodes=(nodes[n1], nodes[n2]), stiffness=stiffness, dampening=dampening
+            )
             links.append(linkm)
             return linkm
-
 
         link1 = add_link_maybe(simplex[0], simplex[1])
         link2 = add_link_maybe(simplex[1], simplex[2])
         link3 = add_link_maybe(simplex[2], simplex[0])
 
-        triangle = ([nodes[simplex[0]], nodes[simplex[1]], nodes[simplex[2]]], [link1, link2, link3])
+        triangle = (
+            [nodes[simplex[0]], nodes[simplex[1]], nodes[simplex[2]]],
+            [link1, link2, link3],
+        )
         triangles.append(triangle)
 except Exception:
     print("Error finding the simplices in the selected structure.")
@@ -356,7 +386,7 @@ for t in range(etime):
                 try:
                     force = link.get_force()
                 except ZeroDivisionError:
-                    force = 0.
+                    force = 0.0
                 try:
                     unit = link.get_unit()
                 except ZeroDivisionError:
@@ -368,10 +398,12 @@ for t in range(etime):
                 if node not in plate.nodes:
                     acceleration = node.acceleration.copy()
                     node.acceleration = node.force / node.mass
-                    node.position += node.velocity * delta + 0.5 * node.acceleration * delta ** 2
+                    node.position += (
+                        node.velocity * delta + 0.5 * node.acceleration * delta**2
+                    )
                     node.velocity += 0.5 * (acceleration + node.acceleration) * delta
 
-            energy = 0.
+            energy = 0.0
 
             for link in links:
                 energy += 0.5 * link.stiffness * link.get_displacement() ** 2
@@ -406,7 +438,12 @@ for t in range(etime):
             context.translate(5, 5)
             context.translate(0, -4)
 
-            context.rectangle(plate.position.x - 0.5 * plate.width, plate.position.y - 0.5, plate.width, 0.5)
+            context.rectangle(
+                plate.position.x - 0.5 * plate.width,
+                plate.position.y - 0.5,
+                plate.width,
+                0.5,
+            )
             context.set_source_rgb(0.5, 0.25, 0.125)
             context.fill_preserve()
             context.set_line_width(0.1)
@@ -416,15 +453,21 @@ for t in range(etime):
             for triangle in triangles:
                 link1, link2, link3 = triangle[1][0], triangle[1][1], triangle[1][2]
                 natural_semi = 0.5 * (link1.length + link2.length + link3.length)
-                actual_semi = 0.5 * (link1.get_length() + link2.get_length() + link3.get_length())
-                natural_area = sqrt(natural_semi *
-                                    (natural_semi - link1.length) *
-                                    (natural_semi - link2.length) *
-                                    (natural_semi - link3.length))
-                actual_area = sqrt(actual_semi *
-                                   (actual_semi - link1.get_length()) *
-                                   (actual_semi - link2.get_length()) *
-                                   (actual_semi - link3.get_length()))
+                actual_semi = 0.5 * (
+                    link1.get_length() + link2.get_length() + link3.get_length()
+                )
+                natural_area = sqrt(
+                    natural_semi
+                    * (natural_semi - link1.length)
+                    * (natural_semi - link2.length)
+                    * (natural_semi - link3.length)
+                )
+                actual_area = sqrt(
+                    actual_semi
+                    * (actual_semi - link1.get_length())
+                    * (actual_semi - link2.get_length())
+                    * (actual_semi - link3.get_length())
+                )
                 try:
                     ratio = actual_area / natural_area
                 except ZeroDivisionError:
@@ -435,11 +478,17 @@ for t in range(etime):
                 context.line_to(triangle[0][2].position.x, triangle[0][2].position.y)
                 context.close_path()
                 if ratio < 1:
-                    context.set_source_rgb(1, min(max(20 * (ratio - 1) + 1, 0), 1),
-                                           min(max(20 * (ratio - 1) + 1, 0), 1))
+                    context.set_source_rgb(
+                        1,
+                        min(max(20 * (ratio - 1) + 1, 0), 1),
+                        min(max(20 * (ratio - 1) + 1, 0), 1),
+                    )
                 else:
-                    context.set_source_rgb(min(max(20 * (1 - ratio) + 1, 0), 1), min(max(20 * (1 - ratio) + 1, 0), 1),
-                                           1)
+                    context.set_source_rgb(
+                        min(max(20 * (1 - ratio) + 1, 0), 1),
+                        min(max(20 * (1 - ratio) + 1, 0), 1),
+                        1,
+                    )
                 context.fill()
 
             for link in links:
@@ -513,10 +562,9 @@ sleep(0.5)
 print("\nAssembling the video file using the contents of the frames folder.")
 try:
     (
-        ffmpeg.
-        input("output/frames/%05d.png", framerate=fps).
-        output("output/video.mp4").
-        run(overwrite_output=True, quiet=True)
+        ffmpeg.input("output/frames/%05d.png", framerate=fps)
+        .output("output/video.mp4")
+        .run(overwrite_output=True, quiet=True)
     )
 except Exception:
     print("Error encoding with FFmpeg media library.")
@@ -545,7 +593,7 @@ es = np.array(energies)
 try:
     plt.style.use("dark_background")
     fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
-    fig1.suptitle("Horizontal kinematics of the \"sensor\" node in time")
+    fig1.suptitle('Horizontal kinematics of the "sensor" node in time')
     ax1.plot(ts, ds, color="red")
     ax1.set_xlabel("Time (s)")
     ax1.set_ylabel("Displacement (m)")
@@ -557,10 +605,13 @@ try:
     ax3.set_ylabel("Acceleration (m/s/s)")
 
     fig2, ax4 = plt.subplots()
-    spectrogram = ax4.specgram(np.abs(acs[::100]), NFFT=32, Fs=1/(100*delta), noverlap=20, cmap="inferno")[3]
+    spectrogram = ax4.specgram(
+        np.abs(acs[::100]), NFFT=32, Fs=1 / (100 * delta), noverlap=20, cmap="inferno"
+    )[3]
     colorbar = fig2.colorbar(spectrogram, ax=ax4)
     ax4.set_title(
-        "Spectrogram of power spectral density of\nhorizontal acceleration magnitude of the \"sensor\" node")
+        'Spectrogram of power spectral density of\nhorizontal acceleration magnitude of the "sensor" node'
+    )
     ax4.set_xlabel("Time (s)")
     ax4.set_ylabel("Frequency (Hz)")
     colorbar.set_label("PSD of Acceleration")

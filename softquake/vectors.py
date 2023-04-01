@@ -7,6 +7,7 @@ from collections.abc import Iterator
 
 class Vector:
     """Two-dimensional vector represented in cartesian coordinates."""
+
     x: float
     y: float
 
@@ -128,5 +129,8 @@ class Vector:
 
 if __name__ == "__main__":
     from time import sleep
-    print("This program is just a library file and is not meant to be executed directly.")
+
+    print(
+        "This program is just a library file and is not meant to be executed directly."
+    )
     sleep(5)

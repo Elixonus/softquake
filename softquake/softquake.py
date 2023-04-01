@@ -26,7 +26,9 @@ class RigidPlate:
     velocity: Vector
     acceleration: Vector
 
-    def __init__(self, sines: list[Sine], width: float, nodes: list[Node], time: float = 0) -> None:
+    def __init__(
+        self, sines: list[Sine], width: float, nodes: list[Node], time: float = 0
+    ) -> None:
         self.sines = sines
         self.width = width
         self.nodes = nodes
@@ -41,15 +43,28 @@ class RigidPlate:
         self.acceleration.set(Vector(0, 0))
 
         for sine in self.sines:
-            self.position.x += sine.amplitude * sin(tau * (sine.frequency * time + sine.phase))
-            self.velocity.x += tau * sine.frequency * sine.amplitude * cos(tau * (sine.frequency * time + sine.phase))
-            self.acceleration.x -= (tau * sine.frequency) ** 2 * sine.amplitude * sin(tau * (sine.frequency * time + sine.phase))
+            self.position.x += sine.amplitude * sin(
+                tau * (sine.frequency * time + sine.phase)
+            )
+            self.velocity.x += (
+                tau
+                * sine.frequency
+                * sine.amplitude
+                * cos(tau * (sine.frequency * time + sine.phase))
+            )
+            self.acceleration.x -= (
+                (tau * sine.frequency) ** 2
+                * sine.amplitude
+                * sin(tau * (sine.frequency * time + sine.phase))
+            )
 
     def set_nodes(self, extent: float) -> None:
         for n, node in enumerate(self.nodes):
             node.position.set(self.position)
             if len(self.nodes) > 1:
-                node.position.x += extent * self.width * (n / (len(self.nodes) - 1) - 0.5)
+                node.position.x += (
+                    extent * self.width * (n / (len(self.nodes) - 1) - 0.5)
+                )
             node.velocity.set(self.velocity)
             node.acceleration.set(self.acceleration)
             node.force.set(node.mass * node.acceleration)
@@ -87,5 +102,8 @@ class Sensor:
 
 if __name__ == "__main__":
     from time import sleep
-    print("This program is just a library file and is not meant to be executed directly.")
+
+    print(
+        "This program is just a library file and is not meant to be executed directly."
+    )
     sleep(5)
