@@ -190,16 +190,16 @@ sleep(0.5)
 frequency = pyip.inputMenu(["Low", "Medium", "High"],
                            prompt="Select the plate horizontal vibration signal by frequency:\n",
                            lettered=True)
-amplitude = 0
+amplitude = 0.
 
 if frequency == "Low":
     frequency = 0.2
-    amplitude = 2
+    amplitude = 2.
 elif frequency == "Medium":
-    frequency = 2
+    frequency = 2.
     amplitude = 0.2
 elif frequency == "High":
-    frequency = 10
+    frequency = 10.
     amplitude = 0.05
 else:
     frequency = 0
@@ -215,7 +215,7 @@ print(
 fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
-time = 0
+time = 0.
 etime = 5
 shot = 0
 
@@ -231,16 +231,7 @@ elif structure == "House":
 elif structure == "Rhombus":
     plate.width = 2
 
-sines = []
-
-if type(frequency) is not list:
-    sine = Sine(frequency=frequency, amplitude=amplitude)
-    sines.append(sine)
-else:
-    sines = []
-    for f, a in zip(frequency, amplitude):
-        sine = Sine(frequency=f, amplitude=a)
-        sines.append(sine)
+sines = [Sine(frequency=frequency, amplitude=amplitude)]
 
 plate.sines = sines
 
@@ -288,7 +279,7 @@ elif structure == "House":
 elif structure == "Rhombus":
     sensor = Sensor(node=nodes[-1])
 else:
-    sensor = None
+    sensor = Sensor(node=nodes[0])
 
 try:
     delaunay = Delaunay(points)
@@ -297,7 +288,7 @@ except Exception:
     print("Error computing the Delaunay triangulation.")
     raise Exception
 
-links = []
+links: list[Link] = []
 triangles = []
 
 try:
@@ -365,7 +356,7 @@ for t in range(etime):
                 try:
                     force = link.get_force()
                 except ZeroDivisionError:
-                    force = 0
+                    force = 0.
                 try:
                     unit = link.get_unit()
                 except ZeroDivisionError:
@@ -380,7 +371,7 @@ for t in range(etime):
                     node.position += node.velocity * delta + 0.5 * node.acceleration * delta ** 2
                     node.velocity += 0.5 * (acceleration + node.acceleration) * delta
 
-            energy = 0
+            energy = 0.
 
             for link in links:
                 energy += 0.5 * link.stiffness * link.get_displacement() ** 2
@@ -544,29 +535,29 @@ except Exception:
 sleep(0.5)
 print("Attempting signal processing on sensor data.")
 
-t = np.array(sensor.times)
-d = np.array(sensor.positions_x)
-v = np.array(sensor.velocities_x)
-a = np.array(sensor.accelerations_x)
-g = a / earth
-e = np.array(energies)
+ts = np.array(sensor.times)
+ds = np.array(sensor.positions_x)
+vs = np.array(sensor.velocities_x)
+acs = np.array(sensor.accelerations_x)
+gs = acs / earth
+es = np.array(energies)
 
 try:
     plt.style.use("dark_background")
     fig1, (ax1, ax2, ax3) = plt.subplots(nrows=3)
     fig1.suptitle("Horizontal kinematics of the \"sensor\" node in time")
-    ax1.plot(t, d, color="red")
+    ax1.plot(ts, ds, color="red")
     ax1.set_xlabel("Time (s)")
     ax1.set_ylabel("Displacement (m)")
-    ax2.plot(t, v, color="dodgerblue")
+    ax2.plot(ts, vs, color="dodgerblue")
     ax2.set_xlabel("Time (s)")
     ax2.set_ylabel("Velocity (m/s)")
-    ax3.plot(t, a, color="magenta")
+    ax3.plot(ts, acs, color="magenta")
     ax3.set_xlabel("Time (s)")
     ax3.set_ylabel("Acceleration (m/s/s)")
 
     fig2, ax4 = plt.subplots()
-    spectrogram = ax4.specgram(np.abs(a[::100]), NFFT=32, Fs=1 / (100 * delta), noverlap=20, cmap="inferno")[3]
+    spectrogram = ax4.specgram(np.abs(acs[::100]), NFFT=32, Fs=1/(100*delta), noverlap=20, cmap="inferno")[3]
     colorbar = fig2.colorbar(spectrogram, ax=ax4)
     ax4.set_title(
         "Spectrogram of power spectral density of\nhorizontal acceleration magnitude of the \"sensor\" node")
@@ -576,7 +567,7 @@ try:
 
     fig3, ax5 = plt.subplots()
     ax5.set_title("Combined elastic potential and kinetic energy.")
-    ax5.plot(t, e, color="yellow")
+    ax5.plot(ts, es, color="yellow")
     ax5.set_xlabel("Time (s)")
     ax5.set_ylabel("Energy (J)")
     fig3.savefig("output/figure3.png")

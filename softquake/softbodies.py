@@ -39,7 +39,7 @@ class Link:
     stiffness: float
     dampening: float
 
-    def __init__(self, nodes: tuple[Node, Node], stiffness: float, dampening: float, length: float = None) -> None:
+    def __init__(self, nodes: tuple[Node, Node], stiffness: float, dampening: float, length: float | None = None) -> None:
         """Create a link from a pair of nodes, stiffness coefficient, dampening coefficient and length."""
         self.nodes = nodes
         if length is None:
