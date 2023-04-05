@@ -12,6 +12,18 @@ from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
 
+print(r"""
+          __ _    ___            _  __    
+ ___ ___ / _| |_ / _ \ _  _ __ _| |/ /___ 
+(_-</ _ \  _|  _| (_) | || / _` | ' </ -_)
+/__/\___/_|  \__|\__\_\\_,_\__,_|_|\_\___|
+
+Softbody Earthquake simulation in the command
+line with fixed presets, visualization video
+and multiple figures.
+
+""")
+
 structure = pyip.inputMenu(
     ["Box", "House", "Rhombus"],
     prompt="Select a softbody structure preset:\n",
