@@ -2,6 +2,8 @@
 
 Simulates the movement of softbody buildings under the effect of earthquakes.
 
+![Softbody Earthquake Video GIF](./output/video.gif)
+
 ## Running
 
 **Requires several libraries listed in the `requirements.txt` file**
