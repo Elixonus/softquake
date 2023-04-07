@@ -382,7 +382,7 @@ print("Leaping through the time dimension with Verlet's method.\n")
 for t in range(etime):
     for s in range(fps):
         p = floor(20 * (time / etime))
-        print(f"Progress : {'-' * p}*{'~' * (20 - p)} : Wait", end="\r")
+        print(f"Progress : [{'-' * p}*{'~' * (20 - p)}] : Wait", end="\r")
         for i in range(ipf):
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
@@ -569,7 +569,7 @@ for t in range(etime):
             raise Exception
         shot += 1
 
-print(f"Progress : {'-' * 20}* : Done")
+print(f"Progress : [{'-' * 20}*] : Done")
 sleep(0.5)
 print("\nAssembling the video file using the contents of the frames folder.")
 try:
