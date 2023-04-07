@@ -244,7 +244,7 @@ fps = 60
 ipf = 100
 delta = 1 / (fps * ipf)
 time = 0.0
-etime = 5
+etime = 10
 shot = 0
 
 earth = 9.8
