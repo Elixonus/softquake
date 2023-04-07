@@ -4,6 +4,8 @@ Simulates the movement of softbody buildings under the effect of earthquakes.
 
 ## Running
 
+**Requires several libraries listed in the `requirements.txt` file**
+
 ```
 cd softquake
 ```
@@ -12,7 +14,7 @@ cd softquake
 python main.py
 ```
 
-The program works by writing information and reading from the user line by line to aid the user in the input of the simulation parameters *(in other terms, reads from standard input)*.
+The program works by writing information and reading from the user line by line (from lists of presets) to aid the user in the input of the simulation parameters *(in other terms, reads from standard input)*.
 
 ## About
 
@@ -31,6 +33,8 @@ Simulation is implemented to:
 * Use a verlet integrator scheme.
 * Use accurate distance and time units.
 * Measure and visualize the contraction and expansion of the individual triangles in the mesh.
+* Account for the effect of external forces.
+* Use Delanuay triangulation for mesh.
 
 Visualization is made to:
 * Make a real-time video diagram using the amazing PyCairo and FFmpeg libraries.
