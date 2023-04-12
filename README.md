@@ -1,8 +1,8 @@
 # softquake
 
-Simulates the movement of softbody buildings under the effect of earthquakes.
+Simulates the movement and stress of softbody buildings under the effect of earthquakes.
 
-![Softbody Earthquake Video GIF](./output/video.gif)
+![Softbody Earthquake Video GIF](./example/video.gif)
 
 ## Running
 
