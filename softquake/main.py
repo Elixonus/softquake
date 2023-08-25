@@ -20,7 +20,7 @@ print(r"""
 
 Softbody Earthquake simulation in the command
 line with fixed presets, visualization video
-and multiple figures.
+and useful figures.
 
 """)
 
@@ -356,6 +356,9 @@ except Exception:
     raise Exception
 
 energies = []
+epotenergies = []
+kinenergies = []
+potenergies = []
 
 sleep(0.5)
 try:
@@ -416,14 +419,24 @@ for t in range(etime):
                     node.velocity += 0.5 * (acceleration + node.acceleration) * delta
 
             energy = 0.0
+            epotenergy = 0.0
+            kinenergy = 0.0
+            potenergy = 0.0
 
             for link in links:
-                energy += 0.5 * link.stiffness * link.get_displacement() ** 2
+                epotenergy += 0.5 * link.stiffness * link.get_displacement() ** 2
 
             for node in nodes:
-                energy += 0.5 * node.mass * node.velocity.len() ** 2
+                kinenergy += 0.5 * node.mass * node.velocity.len() ** 2
 
+            for node in nodes:
+                potenergy += 9.8 * node.mass * (node.position.y - 2) # i know this is lying a bit
+
+            energy += epotenergy + kinenergy + potenergy
             energies.append(energy)
+            epotenergies.append(epotenergy)
+            kinenergies.append(kinenergy)
+            potenergies.append(potenergy)
 
             if sensor is not None:
                 sensor.record(time)
@@ -601,6 +614,9 @@ vs = np.array(sensor.velocities_x)
 acs = np.array(sensor.accelerations_x)
 gs = acs / earth
 es = np.array(energies)
+epes = np.array(epotenergies)
+kes = np.array(kinenergies)
+pes = np.array(potenergies)
 
 try:
     plt.style.use("dark_background")
@@ -629,10 +645,14 @@ try:
     colorbar.set_label("PSD of Acceleration")
 
     fig3, ax5 = plt.subplots()
-    ax5.set_title("Combined elastic potential and kinetic energy.")
+    ax5.set_title("Energy of the structure in time.")
     ax5.plot(ts, es, color="yellow")
+    ax5.plot(ts, epes, color="pink")
+    ax5.plot(ts, kes, color="red")
+    ax5.plot(ts, pes, color="blue")
     ax5.set_xlabel("Time (s)")
     ax5.set_ylabel("Energy (J)")
+    ax5.legend(["Combined Energy", "Elastic Potential Energy", "Kinetic Energy", "Potential Energy"])
     fig3.savefig("output/figure3.png")
 
     sleep(0.5)
