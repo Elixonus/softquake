@@ -12,15 +12,18 @@ from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
 
-print(r"""
-          __ _    ___            _  __    
- ___ ___ / _| |_ / _ \ _  _ __ _| |/ /___ 
-(_-</ _ \  _|  _| (_) | || / _` | ' </ -_)
-/__/\___/_|  \__|\__\_\\_,_\__,_|_|\_\___|
-
-Softbody Earthquake simulation in the command
-line with fixed presets, visualization video
-and useful figures.
+print(r"""    
+    x                                       +--+
+          __ _    ___     *      _  __      |  |
+ ___ ___ / _| |_ / _ \ _  _ __ _| |/ /___   +--+
+(_-</ _ \  _|  _| (_) | || / _` | ' </ -_)  |  |
+/__/\___/_|  \__|\__\_\\_,_\__,_|_|\_\___|  +--+
+               x            >      O        |  |
+   <                                 *   _.->-v-^._.
+                                        /           \.
+Softbody Earthquake simulation in the command        
+line with fixed presets, visualization video         
+and useful figures.                                  
 
 """)
 
@@ -35,16 +38,16 @@ if structure == "Box":
     print(
         r"""
         O--.O.--O
-        | / | \ |
-        O:--O--:O
+        | / | \ |     *
+   *    O:--O--:O
         | \ | / |
         O--:O:--O
-        | / | \ |
+        | / | \ |   
         O:--O--:O
-        | \ | / |
-        O--:O:--O
-        | / | \ |
-        O'--O--'O
+        | \ | / |              *
+        O--:O:--O   
+        | / | \ |   
+  *     O'--O--'O   
         """
     )
     points = np.array(
@@ -78,19 +81,19 @@ if structure == "Box":
 elif structure == "House":
     print(
         r"""
-              O
+     *        O
              / \
             O:-:O
-           / \ / \
-          O:-:O:-:O
+           / \ / \         *
+          O:-:O:-:O 
          / \ / \ / \
-        O:-'O'-:O:-'O
+        O:-'O'-:O:-'O       
         | \ | / | \ |
-        O--:O:--O--:O
+        O--:O:--O--:O        *
         | / | \ | / |
-        O:--O--:O:--O
-        | \ | / | \ |
-        O--'O'--O--'O
+        O:--O--:O:--O        
+ *      | \ | / | \ |
+        O--'O'--O--'O     *
         """
     )
     points = np.array(
@@ -131,15 +134,15 @@ elif structure == "Rhombus":
     print(
         r"""
               O
-             / \
-            O:-:O
-           / \ / \
+      *      / \    *      *
+            O:-:O     
+           / \ / \   *  
           O:-:O:-:O
          / \ / \ / \
         O:-:O:-:O:-:O
-         \ / \ / \ /
+   *     \ / \ / \ /
           O:-:O:-:O
-           \ / \ /
+           \ / \ /         *
             O'-'O
         """
     )
@@ -176,11 +179,13 @@ else:
 
 sleep(0.5)
 stiffness = pyip.inputMenu(
-    ["Low", "High"], prompt="Select the spring stiffness coefficient:\n", lettered=True
+    ["Low", "Medium", "High"], prompt="Select the spring stiffness coefficient:\n", lettered=True
 )
 
 if stiffness == "Low":
     stiffness = 2e6
+elif stiffness == "Medium":
+    stiffness = 4e6
 elif stiffness == "High":
     stiffness = 8e6
 else:
@@ -195,11 +200,13 @@ print(
 
 sleep(0.5)
 dampening = pyip.inputMenu(
-    ["Low", "High"], prompt="Select the spring dampening coefficient:\n", lettered=True
+    ["Low", "Medium", "High"], prompt="Select the spring dampening coefficient:\n", lettered=True
 )
 
 if dampening == "Low":
     dampening = 1e3
+elif dampening == "Medium":
+    dampening = 2e3
 elif dampening == "High":
     dampening = 4e3
 else:
@@ -380,7 +387,9 @@ except Exception:
 sleep(0.5)
 print("Starting the simulation physics and animation loops.")
 sleep(0.5)
-print("Leaping through the time dimension with Verlet's method.\n")
+print("Leaping through the time dimension with Verlet's method.")
+print("               1/4   1/2   3/4")
+print("                v     v     v")
 
 for t in range(etime):
     for s in range(fps):
@@ -660,6 +669,7 @@ try:
     fig1.savefig("output/figure1.png")
     fig2.savefig("output/figure2.png")
     fig3.savefig("output/figure3.png")
+    print("Output can now be found in the output/ folder of the current working directory")
 except Exception:
     print("Error saving graphs with matplotlib plotting library.")
     raise Exception
