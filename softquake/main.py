@@ -14,13 +14,13 @@ from vectors import Vector
 
 print(r"""    
     x                                       +--+
-          __ _    ___     *      _  __      |  |
+          __ _    ___     *      _  __      |><|
  ___ ___ / _| |_ / _ \ _  _ __ _| |/ /___   +--+
-(_-</ _ \  _|  _| (_) | || / _` | ' </ -_)  |  |
+(_-</ _ \  _|  _| (_) | || / _` | ' </ -_)  |><|
 /__/\___/_|  \__|\__\_\\_,_\__,_|_|\_\___|  +--+
-               x            >      O        |  |
+               x            >      O        |><|
    <                                 *   _.->-v-^._.
-                                        /           \.
+                                        / "  .  ' . \.
 Softbody Earthquake simulation in the command        
 line with fixed presets, visualization video         
 and useful figures.                                  
@@ -175,6 +175,19 @@ elif structure == "Rhombus":
         ]
     )
 elif structure == "Hollow":
+    print(
+        r"""
+        O--:O:--O--:O:--O
+        | / | \ | / | \ |
+     *  O:--O--:O:--O--:O       
+        | \ |       | / |
+        O--:O       O:--O    *
+        | / |       | \ |
+        O:--O       O--:O    
+ *      | \ |       | / |  *
+        O--'O       O:--O 
+        """
+    )
     points = np.array(
         [
             [-2, 0],
@@ -724,7 +737,7 @@ try:
     fig1.savefig("output/figure1.png")
     fig2.savefig("output/figure2.png")
     fig3.savefig("output/figure3.png")
-    print("Output can now be found in the output/ folder of the current working directory")
+    print("Output can now be found in the output folder of the current working directory")
 except Exception:
     print("Error saving graphs with matplotlib plotting library.")
     raise Exception
