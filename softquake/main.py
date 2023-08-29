@@ -28,7 +28,7 @@ and useful figures.
 """)
 
 structure = pyip.inputMenu(
-    ["Box", "House", "Rhombus"],
+    ["Box", "House", "Rhombus", "Hollow"],
     prompt="Select a softbody structure preset:\n",
     lettered=True,
 )
@@ -174,6 +174,37 @@ elif structure == "Rhombus":
             [0, 7],
         ]
     )
+elif structure == "Hollow":
+    points = np.array(
+        [
+            [-2, 0],
+            [-1, 0],
+            [1, 0],
+            [2, 0],
+            [-2, 1],
+            [-1, 1],
+            [1, 1],
+            [2, 1],
+            [-2, 2],
+            [-1, 2],
+            [1, 2],
+            [2, 2],
+            [-2, 3],
+            [-1, 3],
+            [1, 3],
+            [2, 3],
+            [-2, 4],
+            [-1, 4],
+            [0, 4],
+            [1, 4],
+            [2, 4],
+            [-2, 5],
+            [-1, 5],
+            [0, 5],
+            [1, 5],
+            [2, 5],
+        ]
+    )
 else:
     points = np.array([])
 
@@ -265,6 +296,8 @@ elif structure == "House":
     plate.width = 5
 elif structure == "Rhombus":
     plate.width = 2
+elif structure == "Hollow":
+    plate.width = 5.5
 
 sines = [Sine(frequency=frequency, amplitude=amplitude)]
 
@@ -282,6 +315,8 @@ elif structure == "House":
     plate.nodes.extend(nodes[0:5])
 elif structure == "Rhombus":
     plate.nodes.extend(nodes[0:2])
+elif structure == "Hollow":
+    plate.nodes.extend(nodes[0:4])
 
 plate.set_kinematics(time)
 plate.set_nodes(0.8)
@@ -312,6 +347,13 @@ if loads == "Yes":
                 Load(node=nodes[-6], force=Vector(0, -60000)),
             ]
         )
+    elif structure == "Hollow":
+        loads.extend(
+            [
+                Load(node=nodes[-2], force=Vector(0, -40000)),
+                Load(node=nodes[-4], force=Vector(0, -40000)),
+            ]
+        )
 else:
     loads = []
 
@@ -321,12 +363,24 @@ elif structure == "House":
     sensor = Sensor(node=nodes[-4])
 elif structure == "Rhombus":
     sensor = Sensor(node=nodes[-1])
+elif structure == "Hollow":
+    sensor = Sensor(node=nodes[-2])
 else:
     sensor = Sensor(node=nodes[0])
 
 try:
-    delaunay = Delaunay(points)
-    simplices = delaunay.simplices
+    if structure != "Hollow":
+        delaunay = Delaunay(points)
+        simplices = delaunay.simplices
+    else:
+        delaunay = None
+        simplices = [[0, 1, 5], [0, 4, 5], [4, 5, 9], [4, 8, 9],
+                     [8, 9, 13], [8, 12, 13], [12, 13, 17], [12, 16, 17],
+                     [16, 17, 22], [16, 21, 22],
+                     [2, 3, 7], [2, 6, 7], [6, 7, 11], [6, 10, 11],
+                     [10, 11, 15], [10, 14, 15], [14, 15, 20], [14, 19, 20],
+                     [19, 20, 25], [19, 24, 25], [17, 18, 23], [17, 22, 23],
+                     [18, 19, 24], [18, 23, 24]]
 except Exception:
     print("Error computing the Delaunay triangulation.")
     raise Exception
@@ -361,6 +415,7 @@ try:
 except Exception:
     print("Error finding the simplices in the selected structure.")
     raise Exception
+
 
 energies = []
 epotenergies = []
