@@ -679,7 +679,7 @@ try:
         remove(file)
     rmdir("output/frames")
 except Exception:
-    print("Error deleting output folder.")
+    print("Error deleting frames folder.")
     raise Exception
 
 sleep(0.5)
