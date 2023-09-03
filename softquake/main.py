@@ -8,28 +8,30 @@ import numpy as np
 from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
 import pyinputplus as pyip
+from colorama import Fore, Back, Style
 from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
 
-print(r"""    
-    x                                       +--+
-          __ _    ___     *      _  __      |><|
- ___ ___ / _| |_ / _ \ _  _ __ _| |/ /___   +--+
-(_-</ _ \  _|  _| (_) | || / _` | ' </ -_)  |><|
-/__/\___/_|  \__|\__\_\\_,_\__,_|_|\_\___|  +--+
-               x            >      O        |><|
-   <                                 *   _.->-v-^._.
-                                        / "  .  ' . \.
-Softbody Earthquake simulation in the command        
+
+print(rf"""    
+  {Fore.WHITE}  x                                       {Fore.RED}+{Fore.RED}--{Fore.RED}+
+          {Fore.RED}__ _    {Fore.BLUE}___     {Fore.WHITE}*      {Fore.BLUE}_  __      {Fore.RED}|{Fore.WHITE}><{Fore.RED}|
+{Fore.RED} ___ ___ / _| |_ {Fore.BLUE}/ _ \ _  _ __ _| |/ /___  {Fore.RED} +{Fore.RED}--{Fore.RED}+
+{Fore.RED}(_-</ _ \  _|  _{Fore.BLUE}| (_) | || / _` | ' </ -_)  {Fore.RED}|{Fore.WHITE}><{Fore.RED}|
+{Fore.RED}/__/\___/_|  \__|{Fore.BLUE}\__\_\\_,_\__,_|_|\_\___|  {Fore.RED}+{Fore.RED}--{Fore.RED}+
+               {Fore.WHITE}x            >      O        {Fore.RED}|{Fore.WHITE}><{Fore.RED}|
+   {Fore.WHITE}<                                 *   {Fore.BLUE}_.->-v-^._.
+                                        {Fore.BLUE}/ "  .  ' . \.
+{Fore.RED}Softbody {Fore.BLUE}Earthquake {Fore.WHITE}simulation in the command        
 line with fixed presets, visualization video         
 and useful figures.                                  
-
+{Fore.RESET}
 """)
 
 structure = pyip.inputMenu(
     ["Box", "House", "Rhombus", "Hollow"],
-    prompt="Select a softbody structure preset:\n",
+    prompt=f"Select a {Fore.RED}softbody {Fore.RESET}structure preset:\n",
     lettered=True,
 )
 print("Approximate Topology Diagram")
@@ -223,7 +225,7 @@ else:
 
 sleep(0.5)
 stiffness = pyip.inputMenu(
-    ["Low", "Medium", "High"], prompt="Select the spring stiffness coefficient:\n", lettered=True
+    ["Low", "Medium", "High"], prompt=f"Select the spring {Style.BRIGHT}stiffness{Style.RESET_ALL} coefficient:\n", lettered=True
 )
 
 if stiffness == "Low":
@@ -238,13 +240,13 @@ else:
 print("Spring Stiffness Diagram")
 print(
     rf"""
-    D---^\/\/\/\/\/\/^---O : {stiffness:.2e} N/m
+    {Fore.YELLOW}D{Fore.RED}---^{Fore.LIGHTRED_EX}\/\/\/\/\/\/{Fore.RED}^---{Fore.YELLOW}O {Fore.WHITE}: {Fore.GREEN}{stiffness:.2e} N/m{Fore.RESET}
     """
 )
 
 sleep(0.5)
 dampening = pyip.inputMenu(
-    ["Low", "Medium", "High"], prompt="Select the spring dampening coefficient:\n", lettered=True
+    ["Low", "Medium", "High"], prompt=f"Select the spring {Style.BRIGHT}dampening{Style.RESET_ALL} coefficient:\n", lettered=True
 )
 
 if dampening == "Low":
@@ -259,7 +261,7 @@ else:
 print("Spring Dampening Diagram")
 print(
     rf"""
-    D--------[::|--------O : {dampening:.2e} N*s/m
+    {Fore.YELLOW}D{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.YELLOW}O {Fore.WHITE}: {Fore.GREEN}{dampening:.2e} N*s/m{Fore.RESET}
     """
 )
 
@@ -286,8 +288,8 @@ else:
 print("Plate Vibration Diagram")
 print(
     rf"""
-       ._________.    : {frequency:.2f} Hz
-    <--|_________|--> : {amplitude:.2f} m
+      {Fore.LIGHTBLUE_EX} ._________.  {Fore.WHITE}  : {Fore.GREEN}{frequency:.2f} Hz
+    {Fore.YELLOW}<--{Fore.BLUE}|_________|{Fore.YELLOW}--> {Fore.WHITE}: {Fore.GREEN}{amplitude:.2f} m{Fore.RESET}
     """
 )
 
