@@ -15,14 +15,14 @@ from vectors import Vector
 
 
 print(rf"""    
-  {Fore.WHITE}  x                                       {Fore.RED}+{Fore.RED}--{Fore.RED}+
-          {Fore.RED}__ _    {Fore.BLUE}___     {Fore.WHITE}*      {Fore.BLUE}_  __      {Fore.RED}|{Fore.WHITE}><{Fore.RED}|
-{Fore.RED} ___ ___ / _| |_ {Fore.BLUE}/ _ \ _  _ __ _| |/ /___  {Fore.RED} +{Fore.RED}--{Fore.RED}+
-{Fore.RED}(_-</ _ \  _|  _{Fore.BLUE}| (_) | || / _` | ' </ -_)  {Fore.RED}|{Fore.WHITE}><{Fore.RED}|
-{Fore.RED}/__/\___/_|  \__|{Fore.BLUE}\__\_\\_,_\__,_|_|\_\___|  {Fore.RED}+{Fore.RED}--{Fore.RED}+
-               {Fore.WHITE}x            >      O        {Fore.RED}|{Fore.WHITE}><{Fore.RED}|
-   {Fore.WHITE}<                                 *   {Fore.BLUE}_.->-v-^._.
-                                        {Fore.BLUE}/ "  .  ' . \.
+  {Fore.WHITE} (x)                                      {Fore.RED}+{Fore.LIGHTRED_EX}--{Fore.RED}+
+          {Fore.LIGHTRED_EX}__ _    {Fore.LIGHTBLUE_EX}___    {Fore.WHITE}(*)     {Fore.LIGHTBLUE_EX}_  __      {Fore.LIGHTRED_EX}|{Fore.WHITE}><{Fore.LIGHTRED_EX}|
+{Fore.LIGHTRED_EX} ___ ___ {Fore.LIGHTRED_EX}/{Fore.RED} _{Fore.LIGHTRED_EX}| {Fore.LIGHTRED_EX}|_ {Fore.LIGHTBLUE_EX}/ {Fore.BLUE}_ {Fore.LIGHTBLUE_EX}\ _  _ __ _| |/ {Fore.LIGHTBLUE_EX}/___  {Fore.RED} +{Fore.LIGHTRED_EX}--{Fore.RED}+
+{Fore.RED}(_-</ _ \  _|  {Fore.LIGHTRED_EX}_{Fore.BLUE}| (_) | || / _` | ' </ -{Fore.LIGHTBLUE_EX}_)  {Fore.LIGHTRED_EX}|{Fore.WHITE}><{Fore.LIGHTRED_EX}|
+{Fore.RED}/__/\___/_|  \__{Fore.LIGHTRED_EX}|{Fore.BLUE}\__\_\\_,_\__,_|_|\_\___{Fore.LIGHTBLUE_EX}|  {Fore.RED}+{Fore.LIGHTRED_EX}--{Fore.RED}+
+              {Fore.WHITE}(x)          (>)    (O)       {Fore.LIGHTRED_EX}|{Fore.WHITE}><{Fore.LIGHTRED_EX}|
+  {Fore.WHITE}(<)                               (*)  {Fore.LIGHTBLUE_EX}_.->-v-^._.
+                                        {Fore.BLUE}/ "  .  ' . {Fore.LIGHTBLUE_EX}\.
 {Fore.RED}Softbody {Fore.BLUE}Earthquake {Fore.WHITE}simulation in the command        
 line with fixed presets, visualization video         
 and useful figures.                                  
@@ -225,7 +225,7 @@ else:
 
 sleep(0.5)
 stiffness = pyip.inputMenu(
-    ["Low", "Medium", "High"], prompt=f"Select the spring {Style.BRIGHT}stiffness{Style.RESET_ALL} coefficient:\n", lettered=True
+    ["Low", "Medium", "High"], prompt=f"Select the {Fore.RED}spring {Fore.RESET}stiffness {Fore.LIGHTBLACK_EX}{Back.BLACK}coefficient{Style.RESET_ALL}:\n", lettered=True
 )
 
 if stiffness == "Low":
@@ -237,16 +237,16 @@ elif stiffness == "High":
 else:
     stiffness = 0
 
-print("Spring Stiffness Diagram")
+print("   Spring Stiffness Diagram")
 print(
     rf"""
-    {Fore.YELLOW}D{Fore.RED}---^{Fore.LIGHTRED_EX}\/\/\/\/\/\/{Fore.RED}^---{Fore.YELLOW}O {Fore.WHITE}: {Fore.GREEN}{stiffness:.2e} N/m{Fore.RESET}
+  {Fore.WHITE}D{Fore.RED}---^{Fore.LIGHTRED_EX}\/\/\/\/\/\/{Fore.RED}^---{Fore.WHITE}O : {Fore.LIGHTGREEN_EX}{stiffness:.2e} {Fore.LIGHTGREEN_EX}N/m{Fore.RESET}
     """
 )
 
 sleep(0.5)
 dampening = pyip.inputMenu(
-    ["Low", "Medium", "High"], prompt=f"Select the spring {Style.BRIGHT}dampening{Style.RESET_ALL} coefficient:\n", lettered=True
+    ["Low", "Medium", "High"], prompt=f"Select the {Fore.RED}spring {Fore.RESET}dampening {Fore.LIGHTBLACK_EX}{Back.BLACK}coefficient{Fore.RESET}:\n", lettered=True
 )
 
 if dampening == "Low":
@@ -258,10 +258,10 @@ elif dampening == "High":
 else:
     dampening = 0
 
-print("Spring Dampening Diagram")
+print("   Spring Dampening Diagram")
 print(
     rf"""
-    {Fore.YELLOW}D{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.YELLOW}O {Fore.WHITE}: {Fore.GREEN}{dampening:.2e} N*s/m{Fore.RESET}
+  {Fore.WHITE}D{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.WHITE}O : {Fore.LIGHTGREEN_EX}{dampening:.2e} {Fore.LIGHTGREEN_EX}N*s/m{Fore.RESET}
     """
 )
 
@@ -285,11 +285,11 @@ elif frequency == "High":
 else:
     frequency = 0
 
-print("Plate Vibration Diagram")
+print("  Plate Vibration Diagram")
 print(
     rf"""
-      {Fore.LIGHTBLUE_EX} ._________.  {Fore.WHITE}  : {Fore.GREEN}{frequency:.2f} Hz
-    {Fore.YELLOW}<--{Fore.BLUE}|_________|{Fore.YELLOW}--> {Fore.WHITE}: {Fore.GREEN}{amplitude:.2f} m{Fore.RESET}
+    {Fore.BLUE} .{Fore.LIGHTBLUE_EX}_________.  {Fore.WHITE}  : {Fore.LIGHTGREEN_EX}{frequency:.2f} {Fore.LIGHTGREEN_EX}Hz
+  {Fore.WHITE}<--{Fore.BLUE}|_________{Fore.LIGHTBLUE_EX}|{Fore.WHITE}--> {Fore.WHITE}: {Fore.LIGHTGREEN_EX}{amplitude:.2f} {Fore.LIGHTGREEN_EX}m{Fore.RESET}
     """
 )
 
@@ -458,13 +458,13 @@ sleep(0.5)
 print("Starting the simulation physics and animation loops.")
 sleep(0.5)
 print("Leaping through the time dimension with Verlet's method.")
-print("               1/4   1/2   3/4")
-print("                v     v     v")
+print(f"{Fore.WHITE}      markers: 1/4   1/2   3/4")
+print(f"{Fore.WHITE}                v     v     v")
 
 for t in range(etime):
     for s in range(fps):
         p = floor(20 * (time / etime))
-        print(f"Progress : [{'-' * p}*{'~' * (20 - p)}] : Wait", end="\r")
+        print(f"{Fore.WHITE}Progress {Fore.WHITE}: [{Fore.YELLOW}{'-' * p}{Back.BLUE}*{Style.RESET_ALL}{Fore.YELLOW}{'~' * (20 - p)}{Fore.WHITE}] : {Fore.RED}Wait{Fore.WHITE} ({round(100 * time / etime)}%){Fore.RESET}", end="\r")
         for i in range(ipf):
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
@@ -661,7 +661,7 @@ for t in range(etime):
             raise Exception
         shot += 1
 
-print(f"Progress : [{'-' * 20}*] : Done")
+print(f"{Fore.WHITE}Progress {Fore.WHITE}: [{Fore.LIGHTGREEN_EX}{'-' * 20}*{Fore.WHITE}] : {Fore.LIGHTGREEN_EX}Done{Fore.WHITE} (100%){Fore.RESET}     ")
 sleep(0.5)
 print("\nAssembling the video file using the contents of the frames folder.")
 try:
