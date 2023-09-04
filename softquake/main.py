@@ -15,7 +15,7 @@ from vectors import Vector
 
 
 try:
-    colors = pyip.inputMenu(["Yes", "No"], prompt="Show colored text:\n")
+    colors = pyip.inputMenu(["Yes", "No"], prompt="Show colored text:\n", lettered=True)
 
     if colors == "Yes":
         colors = True
@@ -42,6 +42,10 @@ try:
         class Back:
             BLACK = ""
             BLUE = ""
+            RED = ""
+            LIGHTYELLOW_EX = ""
+            LIGHTGREEN_EX = ""
+            RESET = ""
 
 
         class Style:
@@ -59,18 +63,18 @@ try:
                   {Fore.LIGHTWHITE_EX}(x)          (>)    (O)       {Fore.LIGHTRED_EX}|{Fore.LIGHTWHITE_EX}><{Fore.LIGHTRED_EX}|
       {Fore.LIGHTWHITE_EX}(<)                               (*)  {Fore.LIGHTBLUE_EX}_.->-v-^._.
                                             {Fore.BLUE}/ "  .  ' . {Fore.LIGHTBLUE_EX}\.
-    {Fore.RED}Softbody {Fore.BLUE}Earthquake {Fore.LIGHTWHITE_EX}simulation in the command        
-    line with fixed presets, visualization video         
-    and useful figures.                                  
-    {Fore.LIGHTWHITE_EX}
-    """)
+{Fore.LIGHTWHITE_EX}What:{Fore.RED}{Back.LIGHTYELLOW_EX}Softbody {Fore.BLUE}Earthquake{Back.BLUE} {Fore.LIGHTWHITE_EX}simulation in the command{Back.RESET}        
+     {Back.BLUE}line with fixed presets, visualization video{Back.RESET}         
+     {Back.BLUE}and useful figures.{Back.RESET}                                  
+     {Fore.RESET}
+     """)
 
     structure = pyip.inputMenu(
         ["Box", "House", "Rhombus", "Hollow"],
         prompt=f"{Fore.LIGHTWHITE_EX}Select a {Fore.RED}softbody {Fore.LIGHTWHITE_EX}structure preset:\n",
         lettered=True,
     )
-    print("Approximate Topology Diagram")
+    print("    Approximate Topology Diagram")
 
     if structure == "Box":
         print(
@@ -86,6 +90,7 @@ try:
             {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O   
             {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|   
      {Fore.LIGHTWHITE_EX}(*)    {Fore.RED}O{Fore.LIGHTRED_EX}'--{Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O{Fore.RESET}   
+          {Fore.LIGHTWHITE_EX}{Back.BLUE}O===========O{Back.RESET}
             """
         )
         points = np.array(
@@ -132,6 +137,7 @@ try:
             {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O        
     {Fore.LIGHTWHITE_EX}(*)     {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
             {Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O{Fore.LIGHTRED_EX}'--{Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O    {Fore.LIGHTWHITE_EX}(*)
+          {Fore.LIGHTWHITE_EX}{Back.BLUE}O===============O{Back.RESET}
             """
         )
         points = np.array(
@@ -182,6 +188,7 @@ try:
               {Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O
                {Fore.LIGHTRED_EX}\ {Fore.LIGHTWHITE_EX}/ \ {Fore.LIGHTRED_EX}/        {Fore.LIGHTWHITE_EX}(*)
                 {Fore.RED}O{Fore.LIGHTRED_EX}'-'{Fore.RED}O{Fore.RESET}
+             {Fore.LIGHTWHITE_EX}{Back.BLUE}O=========O{Back.RESET}
             """
         )
         points = np.array(
@@ -214,17 +221,18 @@ try:
         )
     elif structure == "Hollow":
         print(
-            rf"""
-            {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O
-            {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
-        {Fore.LIGHTWHITE_EX}(*) {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       
-            {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|
-            {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O   {Fore.LIGHTWHITE_EX}(*)
-            {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
-            {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O    
-    {Fore.LIGHTWHITE_EX}(*)     {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}(*)
-            {Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.RESET} 
-            """
+          rf"""
+          {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O
+          {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
+      {Fore.LIGHTWHITE_EX}(*) {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       
+          {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|
+          {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O   {Fore.LIGHTWHITE_EX}(*)
+          {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
+          {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O    
+  {Fore.LIGHTWHITE_EX}(*)     {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}(*)
+          {Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.RESET} 
+        {Fore.LIGHTWHITE_EX}{Back.BLUE}O===================O{Back.RESET}
+          """
         )
         points = np.array(
             [
@@ -504,7 +512,7 @@ try:
         for s in range(fps):
             p = floor(20 * (time / etime))
             print(
-                f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Fore.YELLOW}{'-' * p}{Back.BLUE}*{Style.RESET_ALL}{Fore.YELLOW}{'~' * (20 - p)}{Fore.LIGHTWHITE_EX}] : {Fore.RED}Wait{Fore.LIGHTWHITE_EX} ({round(100 * time / etime)}%){Fore.LIGHTWHITE_EX}",
+                f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Back.RED}{Fore.LIGHTWHITE_EX}{'-' * p}*{'~' * (20 - p)}{Fore.LIGHTWHITE_EX}{Back.RESET}] : {Fore.RED}Wait{Fore.LIGHTWHITE_EX} ({round(100 * time / etime)}%){Fore.LIGHTWHITE_EX}",
                 end="\r")
             for i in range(ipf):
                 plate.set_kinematics(time)
@@ -703,7 +711,7 @@ try:
             shot += 1
 
     print(
-        f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Fore.LIGHTGREEN_EX}{'-' * 20}*{Fore.LIGHTWHITE_EX}] : {Fore.LIGHTGREEN_EX}Done{Fore.LIGHTWHITE_EX} (100%){Fore.LIGHTWHITE_EX}     ")
+        f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Back.LIGHTGREEN_EX}{Fore.LIGHTWHITE_EX}{'-' * 20}*{Back.RESET}] : {Fore.LIGHTGREEN_EX}Done{Fore.LIGHTWHITE_EX} (100%){Fore.LIGHTWHITE_EX}     ")
     sleep(0.5)
     print("\nAssembling the video file using the contents of the frames folder.")
     try:
