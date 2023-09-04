@@ -14,24 +14,58 @@ from softbodies import Node, Link
 from vectors import Vector
 
 
+colors = pyip.inputMenu(["Yes", "No"], prompt="Show colored text:\n")
+
+if colors == "Yes":
+    colors = True
+elif colors == "No":
+    colors = False
+
+if colors is not True:
+    class Fore:
+        WHITE = ""
+        RED = ""
+        BLUE = ""
+        BLACK = ""
+        YELLOW = ""
+        MAGENTA = ""
+        LIGHTWHITE_EX = ""
+        LIGHTRED_EX = ""
+        LIGHTBLUE_EX = ""
+        LIGHTBLACK_EX = ""
+        LIGHTGREEN_EX = ""
+        LIGHTMAGENTA_EX = ""
+        RESET = ""
+
+
+    class Back:
+        BLACK = ""
+        BLUE = ""
+
+
+    class Style:
+        RESET_ALL = ""
+else:
+    print(f"{Fore.LIGHTWHITE_EX}Now showing {Fore.RED}c{Fore.MAGENTA}o{Fore.YELLOW}l{Fore.LIGHTGREEN_EX}o{Fore.BLUE}r{Fore.LIGHTBLUE_EX}e{Fore.LIGHTMAGENTA_EX}d {Fore.LIGHTWHITE_EX}text art!")
+
 print(rf"""    
-  {Fore.WHITE} (x)                                      {Fore.RED}+{Fore.LIGHTRED_EX}--{Fore.RED}+
-          {Fore.LIGHTRED_EX}__ _    {Fore.LIGHTBLUE_EX}___    {Fore.WHITE}(*)     {Fore.LIGHTBLUE_EX}_  __      {Fore.LIGHTRED_EX}|{Fore.WHITE}><{Fore.LIGHTRED_EX}|
+  {Fore.LIGHTWHITE_EX} (x)                                      {Fore.RED}+{Fore.LIGHTRED_EX}--{Fore.RED}+
+          {Fore.LIGHTRED_EX}__ _    {Fore.LIGHTBLUE_EX}___    {Fore.LIGHTWHITE_EX}(*)     {Fore.LIGHTBLUE_EX}_  __      {Fore.LIGHTRED_EX}|{Fore.LIGHTWHITE_EX}><{Fore.LIGHTRED_EX}|
 {Fore.LIGHTRED_EX} ___ ___ {Fore.LIGHTRED_EX}/{Fore.RED} _{Fore.LIGHTRED_EX}| {Fore.LIGHTRED_EX}|_ {Fore.LIGHTBLUE_EX}/ {Fore.BLUE}_ {Fore.LIGHTBLUE_EX}\ _  _ __ _| |/ {Fore.LIGHTBLUE_EX}/___  {Fore.RED} +{Fore.LIGHTRED_EX}--{Fore.RED}+
-{Fore.RED}(_-</ _ \  _|  {Fore.LIGHTRED_EX}_{Fore.BLUE}| (_) | || / _` | ' </ -{Fore.LIGHTBLUE_EX}_)  {Fore.LIGHTRED_EX}|{Fore.WHITE}><{Fore.LIGHTRED_EX}|
+{Fore.RED}(_-</ _ \  _|  {Fore.LIGHTRED_EX}_{Fore.BLUE}| (_) | || / _` | ' </ -{Fore.LIGHTBLUE_EX}_)  {Fore.LIGHTRED_EX}|{Fore.LIGHTWHITE_EX}><{Fore.LIGHTRED_EX}|
 {Fore.RED}/__/\___/_|  \__{Fore.LIGHTRED_EX}|{Fore.BLUE}\__\_\\_,_\__,_|_|\_\___{Fore.LIGHTBLUE_EX}|  {Fore.RED}+{Fore.LIGHTRED_EX}--{Fore.RED}+
-              {Fore.WHITE}(x)          (>)    (O)       {Fore.LIGHTRED_EX}|{Fore.WHITE}><{Fore.LIGHTRED_EX}|
-  {Fore.WHITE}(<)                               (*)  {Fore.LIGHTBLUE_EX}_.->-v-^._.
+              {Fore.LIGHTWHITE_EX}(x)          (>)    (O)       {Fore.LIGHTRED_EX}|{Fore.LIGHTWHITE_EX}><{Fore.LIGHTRED_EX}|
+  {Fore.LIGHTWHITE_EX}(<)                               (*)  {Fore.LIGHTBLUE_EX}_.->-v-^._.
                                         {Fore.BLUE}/ "  .  ' . {Fore.LIGHTBLUE_EX}\.
-{Fore.RED}Softbody {Fore.BLUE}Earthquake {Fore.WHITE}simulation in the command        
+{Fore.RED}Softbody {Fore.BLUE}Earthquake {Fore.LIGHTWHITE_EX}simulation in the command        
 line with fixed presets, visualization video         
 and useful figures.                                  
-{Fore.RESET}
+{Fore.LIGHTWHITE_EX}
 """)
 
 structure = pyip.inputMenu(
     ["Box", "House", "Rhombus", "Hollow"],
-    prompt=f"Select a {Fore.RED}softbody {Fore.RESET}structure preset:\n",
+    prompt=f"{Fore.LIGHTWHITE_EX}Select a {Fore.RED}softbody {Fore.LIGHTWHITE_EX}structure preset:\n",
     lettered=True,
 )
 print("Approximate Topology Diagram")
@@ -225,7 +259,7 @@ else:
 
 sleep(0.5)
 stiffness = pyip.inputMenu(
-    ["Low", "Medium", "High"], prompt=f"Select the {Fore.RED}spring {Fore.RESET}stiffness {Fore.LIGHTBLACK_EX}{Back.BLACK}coefficient{Style.RESET_ALL}:\n", lettered=True
+    ["Low", "Medium", "High"], prompt=f"{Fore.LIGHTWHITE_EX}Select the {Fore.RED}spring {Fore.LIGHTWHITE_EX}stiffness coefficient{Fore.LIGHTWHITE_EX}:\n", lettered=True
 )
 
 if stiffness == "Low":
@@ -240,13 +274,13 @@ else:
 print("   Spring Stiffness Diagram")
 print(
     rf"""
-  {Fore.WHITE}D{Fore.RED}---^{Fore.LIGHTRED_EX}\/\/\/\/\/\/{Fore.RED}^---{Fore.WHITE}O : {Fore.LIGHTGREEN_EX}{stiffness:.2e} {Fore.LIGHTGREEN_EX}N/m{Fore.RESET}
+  {Fore.LIGHTWHITE_EX}D{Fore.RED}---^{Fore.LIGHTRED_EX}\/\/\/\/\/\/{Fore.RED}^---{Fore.LIGHTWHITE_EX}O : {Fore.LIGHTGREEN_EX}{stiffness:.2e} {Fore.LIGHTGREEN_EX}N/m{Fore.LIGHTWHITE_EX}
     """
 )
 
 sleep(0.5)
 dampening = pyip.inputMenu(
-    ["Low", "Medium", "High"], prompt=f"Select the {Fore.RED}spring {Fore.RESET}dampening {Fore.LIGHTBLACK_EX}{Back.BLACK}coefficient{Fore.RESET}:\n", lettered=True
+    ["Low", "Medium", "High"], prompt=f"{Fore.LIGHTWHITE_EX}Select the {Fore.RED}spring {Fore.LIGHTWHITE_EX}dampening coefficient{Fore.LIGHTWHITE_EX}:\n", lettered=True
 )
 
 if dampening == "Low":
@@ -261,14 +295,14 @@ else:
 print("   Spring Dampening Diagram")
 print(
     rf"""
-  {Fore.WHITE}D{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.WHITE}O : {Fore.LIGHTGREEN_EX}{dampening:.2e} {Fore.LIGHTGREEN_EX}N*s/m{Fore.RESET}
+  {Fore.LIGHTWHITE_EX}D{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.LIGHTWHITE_EX}O : {Fore.LIGHTGREEN_EX}{dampening:.2e} {Fore.LIGHTGREEN_EX}N*s/m{Fore.LIGHTWHITE_EX}
     """
 )
 
 sleep(0.5)
 frequency = pyip.inputMenu(
     ["Low", "Medium", "High"],
-    prompt="Select the plate horizontal vibration signal by frequency:\n",
+    prompt=f"{Fore.LIGHTWHITE_EX}Select the plate horizontal vibration signal by frequency:\n",
     lettered=True,
 )
 amplitude = 0.0
@@ -288,8 +322,8 @@ else:
 print("  Plate Vibration Diagram")
 print(
     rf"""
-    {Fore.BLUE} .{Fore.LIGHTBLUE_EX}_________.  {Fore.WHITE}  : {Fore.LIGHTGREEN_EX}{frequency:.2f} {Fore.LIGHTGREEN_EX}Hz
-  {Fore.WHITE}<--{Fore.BLUE}|_________{Fore.LIGHTBLUE_EX}|{Fore.WHITE}--> {Fore.WHITE}: {Fore.LIGHTGREEN_EX}{amplitude:.2f} {Fore.LIGHTGREEN_EX}m{Fore.RESET}
+    {Fore.BLUE} .{Fore.LIGHTBLUE_EX}_________.  {Fore.LIGHTWHITE_EX}  : {Fore.LIGHTGREEN_EX}{frequency:.2f} {Fore.LIGHTGREEN_EX}Hz
+  {Fore.LIGHTWHITE_EX}<--{Fore.BLUE}|_________{Fore.LIGHTBLUE_EX}|{Fore.LIGHTWHITE_EX}--> {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{amplitude:.2f} {Fore.LIGHTGREEN_EX}m{Fore.LIGHTWHITE_EX}
     """
 )
 
@@ -337,7 +371,7 @@ plate.set_kinematics(time)
 plate.set_nodes(0.8)
 
 sleep(0.5)
-loads = pyip.inputMenu(["No", "Yes"], prompt="Apply external loads?\n", lettered=True)
+loads = pyip.inputMenu(["No", "Yes"], prompt=f"{Fore.LIGHTWHITE_EX}Apply external loads?\n", lettered=True)
 
 if loads == "Yes":
     loads = []
@@ -458,13 +492,13 @@ sleep(0.5)
 print("Starting the simulation physics and animation loops.")
 sleep(0.5)
 print("Leaping through the time dimension with Verlet's method.")
-print(f"{Fore.WHITE}      markers: 1/4   1/2   3/4")
-print(f"{Fore.WHITE}                v     v     v")
+print(f"{Fore.LIGHTWHITE_EX}      markers: 1/4   1/2   3/4")
+print(f"{Fore.LIGHTWHITE_EX}                v     v     v")
 
 for t in range(etime):
     for s in range(fps):
         p = floor(20 * (time / etime))
-        print(f"{Fore.WHITE}Progress {Fore.WHITE}: [{Fore.YELLOW}{'-' * p}{Back.BLUE}*{Style.RESET_ALL}{Fore.YELLOW}{'~' * (20 - p)}{Fore.WHITE}] : {Fore.RED}Wait{Fore.WHITE} ({round(100 * time / etime)}%){Fore.RESET}", end="\r")
+        print(f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Fore.YELLOW}{'-' * p}{Back.BLUE}*{Style.RESET_ALL}{Fore.YELLOW}{'~' * (20 - p)}{Fore.LIGHTWHITE_EX}] : {Fore.RED}Wait{Fore.LIGHTWHITE_EX} ({round(100 * time / etime)}%){Fore.LIGHTWHITE_EX}", end="\r")
         for i in range(ipf):
             plate.set_kinematics(time)
             plate.set_nodes(0.8)
@@ -661,7 +695,7 @@ for t in range(etime):
             raise Exception
         shot += 1
 
-print(f"{Fore.WHITE}Progress {Fore.WHITE}: [{Fore.LIGHTGREEN_EX}{'-' * 20}*{Fore.WHITE}] : {Fore.LIGHTGREEN_EX}Done{Fore.WHITE} (100%){Fore.RESET}     ")
+print(f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Fore.LIGHTGREEN_EX}{'-' * 20}*{Fore.LIGHTWHITE_EX}] : {Fore.LIGHTGREEN_EX}Done{Fore.LIGHTWHITE_EX} (100%){Fore.LIGHTWHITE_EX}     ")
 sleep(0.5)
 print("\nAssembling the video file using the contents of the frames folder.")
 try:
