@@ -1,4 +1,4 @@
-from math import tau, sqrt, atan2, floor, cos, sin
+from math import tau, sqrt, atan2, floor
 from os import path, mkdir, rmdir, remove
 from glob import glob
 from time import sleep
@@ -286,7 +286,7 @@ try:
     print("     Spring Stiffness Diagram")
     print(
         rf"""
-      {Fore.LIGHTWHITE_EX}D{Fore.RED}---^{Fore.LIGHTRED_EX}\/\/\/\/\/\/{Fore.RED}^---{Fore.LIGHTWHITE_EX}O : {Fore.LIGHTGREEN_EX}{stiffness:.2e} {Fore.LIGHTGREEN_EX}N/m{Fore.LIGHTWHITE_EX}
+      {Fore.LIGHTWHITE_EX}{Back.BLUE}D{Back.RESET}{Fore.RED}---^{Fore.LIGHTRED_EX}\/\/\/\/\/\/{Fore.RED}^---{Fore.LIGHTWHITE_EX}{Back.BLUE}O{Back.RESET} : {Fore.LIGHTGREEN_EX}{stiffness:.2e} {Fore.LIGHTGREEN_EX}N/m{Fore.LIGHTWHITE_EX}
         """
     )
 
@@ -309,7 +309,7 @@ try:
     print("     Spring Dampening Diagram")
     print(
         rf"""
-      {Fore.LIGHTWHITE_EX}D{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.LIGHTWHITE_EX}O : {Fore.LIGHTGREEN_EX}{dampening:.2e} {Fore.LIGHTGREEN_EX}N*s/m{Fore.LIGHTWHITE_EX}
+      {Fore.LIGHTWHITE_EX}{Back.BLUE}D{Back.RESET}{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.LIGHTWHITE_EX}{Back.BLUE}O{Back.RESET} : {Fore.LIGHTGREEN_EX}{dampening:.2e} {Fore.LIGHTGREEN_EX}N*s/m{Fore.LIGHTWHITE_EX}
         """
     )
 
@@ -322,11 +322,11 @@ try:
     amplitude = 0.0
 
     if frequency == "Low":
-        frequency = 0.2
+        frequency = 0.25
         amplitude = 2.0
     elif frequency == "Medium":
         frequency = 2.0
-        amplitude = 0.2
+        amplitude = 0.4
     elif frequency == "High":
         frequency = 10.0
         amplitude = 0.05
@@ -337,7 +337,7 @@ try:
     print(
         rf"""
         {Fore.BLUE} .{Fore.LIGHTBLUE_EX}_________.  {Fore.LIGHTWHITE_EX}  : {Fore.LIGHTGREEN_EX}{frequency:.2f} {Fore.LIGHTGREEN_EX}Hz
-      {Fore.LIGHTWHITE_EX}<--{Fore.BLUE}|_________{Fore.LIGHTBLUE_EX}|{Fore.LIGHTWHITE_EX}--> {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{amplitude:.2f} {Fore.LIGHTGREEN_EX}m{Fore.LIGHTWHITE_EX}
+      {Fore.LIGHTWHITE_EX}{Back.BLUE}<--{Back.RESET}{Fore.BLUE}|_________{Fore.LIGHTBLUE_EX}|{Fore.LIGHTWHITE_EX}{Back.BLUE}-->{Back.RESET} {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{amplitude:.2f} {Fore.LIGHTGREEN_EX}m{Fore.LIGHTWHITE_EX}
         """
     )
 
@@ -543,8 +543,11 @@ try:
                         dist = Vector.dist(node1.position, node2.position)
 
                         if 0.01 < dist < 0.75:
-                            vector = Vector((node1.position.x - node2.position.x) / dist,
-                                            (node1.position.y - node2.position.y) / dist)
+                            try:
+                                vector = Vector((node1.position.x - node2.position.x) / dist,
+                                                (node1.position.y - node2.position.y) / dist)
+                            except ZeroDivisionError:
+                                vector = Vector(0, 0)
                             dx = 0.75 - dist
                             node1.force.x += 4e6 * dx * vector.x
                             node1.force.y += 4e6 * dx * vector.y
@@ -559,15 +562,6 @@ try:
                                 node.velocity * delta + 0.5 * node.acceleration * delta ** 2
                         )
                         node.velocity += 0.5 * (acceleration + node.acceleration) * delta
-
-                for node in nodes:
-                    if plate.position.x - 0.5 * plate.width < node.position.x < plate.position.x + 0.5 * plate.width:
-                        if node.position.x < plate.position.x:
-                            node.position.x = plate.position.x - 0.5 * plate.width
-                        else:
-                            node.position.x = plate.position.x + 0.5 * plate.width
-                    if node.position.y < plate.position.y:
-                        node.position.y = plate.position.y
 
                 energy = 0.0
                 epotenergy = 0.0
