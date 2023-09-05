@@ -55,15 +55,15 @@ try:
             f"{Fore.LIGHTWHITE_EX}Now showing {Fore.RED}c{Fore.MAGENTA}o{Fore.YELLOW}l{Fore.LIGHTGREEN_EX}o{Fore.BLUE}r{Fore.LIGHTBLUE_EX}e{Fore.LIGHTMAGENTA_EX}d {Fore.LIGHTWHITE_EX}text art!{Fore.RESET}")
 
     print(rf"""    
-      {Fore.LIGHTWHITE_EX} (x)                                      {Fore.RED}+{Fore.LIGHTRED_EX}--{Fore.RED}+
-              {Fore.LIGHTRED_EX}__ _    {Fore.LIGHTBLUE_EX}___    {Fore.LIGHTWHITE_EX}[*]     {Fore.LIGHTBLUE_EX}_  __      {Fore.LIGHTRED_EX}|{Fore.LIGHTWHITE_EX}><{Fore.LIGHTRED_EX}|
+                                                {Fore.RED}+{Fore.LIGHTRED_EX}--{Fore.RED}+
+              {Fore.LIGHTRED_EX}__ _    {Fore.LIGHTBLUE_EX}___            {Fore.LIGHTBLUE_EX}_  __      {Fore.LIGHTRED_EX}|{Fore.LIGHTWHITE_EX}><{Fore.LIGHTRED_EX}|
     {Fore.LIGHTRED_EX} ___ ___ {Fore.LIGHTRED_EX}/{Fore.RED} _{Fore.LIGHTRED_EX}| {Fore.LIGHTRED_EX}|_ {Fore.LIGHTBLUE_EX}/ {Fore.BLUE}_ {Fore.LIGHTBLUE_EX}\ _  _ __ _| |/ {Fore.LIGHTBLUE_EX}/___  {Fore.RED} +{Fore.LIGHTRED_EX}--{Fore.RED}+
     {Fore.RED}(_-</ _ \  _|  {Fore.LIGHTRED_EX}_{Fore.BLUE}| (_) | || / _` | ' </ -{Fore.LIGHTBLUE_EX}_)  {Fore.LIGHTRED_EX}|{Fore.LIGHTWHITE_EX}><{Fore.LIGHTRED_EX}|
     {Fore.RED}/__/\___/_|  \__{Fore.LIGHTRED_EX}|{Fore.BLUE}\__\_\\_,_\__,_|_|\_\___{Fore.LIGHTBLUE_EX}|  {Fore.RED}+{Fore.LIGHTRED_EX}--{Fore.RED}+
     {Fore.RED}@@@@@@@@@@@@@@@@@{Fore.BLUE}@@@@@@@@@@@@@@@@@@@@@@@@@  {Fore.LIGHTRED_EX}|{Fore.LIGHTWHITE_EX}><{Fore.LIGHTRED_EX}|
-      {Fore.LIGHTWHITE_EX}[<]                               (*)  {Fore.LIGHTBLUE_EX}_.->-v-^._.
+                                             {Fore.LIGHTBLUE_EX}_.->-v-^._.
                                             {Fore.BLUE}/ "  .  ' . {Fore.LIGHTBLUE_EX}\.
-{Fore.LIGHTWHITE_EX}What:{Fore.RED}{Back.LIGHTYELLOW_EX}Softbody {Fore.BLUE}Earthquake{Back.BLUE} {Fore.LIGHTWHITE_EX}simulation in the command{Back.RESET}        
+     {Fore.RED}{Back.LIGHTYELLOW_EX}Softbody {Fore.BLUE}Earthquake{Back.BLUE} {Fore.LIGHTWHITE_EX}simulation in the command{Back.RESET}        
      {Back.BLUE}line with fixed presets, visualization video{Back.RESET}         
                 {Back.BLUE}and useful figures.{Back.RESET}                                  
      {Fore.RESET}
@@ -80,16 +80,16 @@ try:
         print(
             rf"""
             {Fore.RED}O{Fore.LIGHTRED_EX}--.{Fore.RED}O{Fore.LIGHTRED_EX}.--{Fore.RED}O
-            {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|    {Fore.LIGHTWHITE_EX}[*]
-      {Fore.LIGHTWHITE_EX}(*)   {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O
+            {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|    
+            {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O
             {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|
             {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O
             {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|   
             {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O
-            {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|             {Fore.LIGHTWHITE_EX}[*]
+            {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|    
             {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O   
             {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|   
-     {Fore.LIGHTWHITE_EX}(*)    {Fore.RED}O{Fore.LIGHTRED_EX}'--{Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O{Fore.RESET}   
+            {Fore.RED}O{Fore.LIGHTRED_EX}'--{Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O{Fore.RESET}   
           {Fore.LIGHTWHITE_EX}{Back.BLUE}O===========O{Back.RESET}
             """
         )
@@ -124,19 +124,19 @@ try:
     elif structure == "House":
         print(
             rf"""
-        {Fore.LIGHTWHITE_EX}[*]       {Fore.RED}O
+                  {Fore.RED}O
                  {Fore.LIGHTRED_EX}/ \
                 {Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O
-               {Fore.LIGHTRED_EX}/ {Fore.LIGHTWHITE_EX}\ / {Fore.LIGHTRED_EX}\        {Fore.LIGHTWHITE_EX}(*)
+               {Fore.LIGHTRED_EX}/ {Fore.LIGHTWHITE_EX}\ / {Fore.LIGHTRED_EX}\        
               {Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O 
              {Fore.LIGHTRED_EX}/ {Fore.LIGHTWHITE_EX}\ / \ / {Fore.LIGHTRED_EX}\
             {Fore.RED}O{Fore.LIGHTRED_EX}:-'{Fore.RED}O{Fore.LIGHTRED_EX}'-:{Fore.RED}O{Fore.LIGHTRED_EX}:-'{Fore.RED}O       
             {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
-            {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       {Fore.LIGHTWHITE_EX}(*)
+            {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       
             {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|
             {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O        
-    {Fore.LIGHTWHITE_EX}(*)     {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
-            {Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O{Fore.LIGHTRED_EX}'--{Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O    {Fore.LIGHTWHITE_EX}[*]
+            {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
+            {Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O{Fore.LIGHTRED_EX}'--{Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O    
           {Fore.LIGHTWHITE_EX}{Back.BLUE}O===============O{Back.RESET}
             """
         )
@@ -178,15 +178,15 @@ try:
         print(
             rf"""
                   {Fore.RED}O
-         {Fore.LIGHTWHITE_EX}(*)     {Fore.LIGHTRED_EX}/ \          {Fore.LIGHTWHITE_EX}(*)
+                 {Fore.LIGHTRED_EX}/ \          
                 {Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O     
-               {Fore.LIGHTRED_EX}/ {Fore.LIGHTWHITE_EX}\ / {Fore.LIGHTRED_EX}\  {Fore.LIGHTWHITE_EX}<*> 
+               {Fore.LIGHTRED_EX}/ {Fore.LIGHTWHITE_EX}\ / {Fore.LIGHTRED_EX}\ 
               {Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O
              {Fore.LIGHTRED_EX}/ {Fore.LIGHTWHITE_EX}\ / \ / {Fore.LIGHTRED_EX}\
             {Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O
-      {Fore.LIGHTWHITE_EX}[*]    {Fore.LIGHTRED_EX}\ {Fore.LIGHTWHITE_EX}/ \ / \ {Fore.LIGHTRED_EX}/
+             {Fore.LIGHTRED_EX}\ {Fore.LIGHTWHITE_EX}/ \ / \ {Fore.LIGHTRED_EX}/
               {Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O
-               {Fore.LIGHTRED_EX}\ {Fore.LIGHTWHITE_EX}/ \ {Fore.LIGHTRED_EX}/        {Fore.LIGHTWHITE_EX}(*)
+               {Fore.LIGHTRED_EX}\ {Fore.LIGHTWHITE_EX}/ \ {Fore.LIGHTRED_EX}/        
                 {Fore.RED}O{Fore.LIGHTRED_EX}'-'{Fore.RED}O{Fore.RESET}
              {Fore.LIGHTWHITE_EX}{Back.BLUE}O=========O{Back.RESET}
             """
@@ -224,12 +224,12 @@ try:
           rf"""
           {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O
           {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
-      {Fore.LIGHTWHITE_EX}(*) {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       
+          {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       
           {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|
-          {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O   {Fore.LIGHTWHITE_EX}(*)
+          {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O      
           {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
           {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O    
-  {Fore.LIGHTWHITE_EX}<*>     {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}<*>
+          {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| 
           {Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.RESET} 
         {Fore.LIGHTWHITE_EX}{Back.BLUE}O===================O{Back.RESET}
           """
