@@ -1,4 +1,4 @@
-from math import tau, sqrt, atan2, floor
+from math import tau, sqrt, atan2, floor, cos, sin
 from os import path, mkdir, rmdir, remove
 from glob import glob
 from time import sleep
@@ -8,7 +8,7 @@ import numpy as np
 from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
 import pyinputplus as pyip
-from colorama import Fore, Back, Style
+from colorama import Fore, Back
 from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
@@ -537,6 +537,20 @@ try:
                     link.nodes[0].force -= unit * force
                     link.nodes[1].force += unit * force
 
+                for n1, node1 in enumerate(nodes):
+                    for n2 in range(n1 + 1, len(nodes)):
+                        node2 = nodes[n2]
+                        dist = Vector.dist(node1.position, node2.position)
+
+                        if 0.01 < dist < 0.75:
+                            vector = Vector((node1.position.x - node2.position.x) / dist,
+                                            (node1.position.y - node2.position.y) / dist)
+                            dx = 0.75 - dist
+                            node1.force.x += 4e6 * dx * vector.x
+                            node1.force.y += 4e6 * dx * vector.y
+                            node2.force.x -= 4e6 * dx * vector.x
+                            node2.force.y -= 4e6 * dx * vector.y
+
                 for node in nodes:
                     if node not in plate.nodes:
                         acceleration = node.acceleration.copy()
@@ -545,6 +559,15 @@ try:
                                 node.velocity * delta + 0.5 * node.acceleration * delta ** 2
                         )
                         node.velocity += 0.5 * (acceleration + node.acceleration) * delta
+
+                for node in nodes:
+                    if plate.position.x - 0.5 * plate.width < node.position.x < plate.position.x + 0.5 * plate.width:
+                        if node.position.x < plate.position.x:
+                            node.position.x = plate.position.x - 0.5 * plate.width
+                        else:
+                            node.position.x = plate.position.x + 0.5 * plate.width
+                    if node.position.y < plate.position.y:
+                        node.position.y = plate.position.y
 
                 energy = 0.0
                 epotenergy = 0.0
