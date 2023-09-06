@@ -13,6 +13,7 @@ from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
 
+draw_text = True
 
 try:
     colors = pyip.inputMenu(["Yes", "No"], prompt="Show colored text:\n", lettered=True)
@@ -592,6 +593,7 @@ try:
                 surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1000, 1000)
                 context = cairo.Context(surface)
 
+                context.save()
                 context.translate(0, 500)
                 context.scale(1, -1)
                 context.translate(0, -500)
@@ -719,6 +721,22 @@ try:
                     context.set_source_rgb(1, 1, 0)
                     context.stroke()
                     context.restore()
+
+                context.restore()
+
+                if draw_text:
+                    context.select_font_face("sans-serif", cairo.FontSlant.NORMAL, cairo.FontWeight.BOLD)
+                    context.set_font_size(50)
+                    context.move_to(20, 70)
+
+                    for t, text in enumerate([f"shot={shot:05}", f"fps={fps}", f"ipf={ipf}", f"dt={delta:.2E}"]):
+                        context.move_to(20, 70 + t * 60)
+                        context.text_path(text)
+                        context.set_source_rgb(1, 1, 0)
+                        context.fill_preserve()
+                        context.set_source_rgb(0, 0, 0)
+                        context.set_line_width(2)
+                        context.stroke()
 
                 surface.write_to_png(f"output/frames/{shot:05}.png")
                 surface.finish()
