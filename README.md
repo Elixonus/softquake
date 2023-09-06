@@ -18,7 +18,7 @@ The program works by writing information and reading from the user line by line 
 
 Softbody structure is assumed to:
 * Have Hookean springs and dampeners connecting the set of nodes.
-* Have no self collision property.
+* Have a self collision property.
 * Have no effect on the earthquake plate.
 * Be under the influence of gravity.
 
