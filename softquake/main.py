@@ -294,7 +294,7 @@ try:
     sleep(0.5)
     dampening = pyip.inputMenu(
         ["Low", "Medium", "High"],
-        prompt=f"{Fore.LIGHTWHITE_EX}Select the {Fore.RED}spring {Fore.LIGHTWHITE_EX}dampening coefficient{Fore.LIGHTWHITE_EX}:\n",
+        prompt=f"{Fore.LIGHTWHITE_EX}Select the {Fore.RED}damper {Fore.LIGHTWHITE_EX}dampening coefficient{Fore.LIGHTWHITE_EX}:\n",
         lettered=True
     )
 
@@ -307,7 +307,7 @@ try:
     else:
         dampening = 0
 
-    print("     Spring Dampening Diagram")
+    print("     Damper Dampening Diagram")
     print(
         rf"""
       {Fore.LIGHTWHITE_EX}{Back.BLUE}D{Back.RESET}{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.LIGHTWHITE_EX}{Back.BLUE}O{Back.RESET} : {Fore.LIGHTGREEN_EX}{dampening:.2e} {Fore.LIGHTGREEN_EX}N*s/m{Fore.LIGHTWHITE_EX}
