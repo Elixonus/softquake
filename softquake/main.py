@@ -8,7 +8,7 @@ import numpy as np
 from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
 import pyinputplus as pyip
-from colorama import Fore, Back
+from colorama import Fore, Back, Style
 from softquake import RigidPlate, Sine, Load, Sensor
 from softbodies import Node, Link
 from vectors import Vector
@@ -53,7 +53,7 @@ try:
             RESET_ALL = ""
     else:
         print(
-            f"{Fore.LIGHTWHITE_EX}Now showing {Fore.RED}c{Fore.MAGENTA}o{Fore.YELLOW}l{Fore.LIGHTGREEN_EX}o{Fore.BLUE}r{Fore.LIGHTBLUE_EX}e{Fore.LIGHTMAGENTA_EX}d {Fore.LIGHTWHITE_EX}text art!{Fore.RESET}")
+            f"{Fore.LIGHTWHITE_EX}Now showing {Fore.RED}c{Fore.MAGENTA}o{Fore.YELLOW}l{Fore.LIGHTGREEN_EX}o{Fore.BLUE}r{Fore.LIGHTBLUE_EX}e{Fore.LIGHTMAGENTA_EX}d {Fore.LIGHTWHITE_EX}text art!{Style.RESET_ALL}")
 
     print(rf"""    
                                                 {Fore.RED}+{Fore.LIGHTRED_EX}--{Fore.RED}+
@@ -64,10 +64,10 @@ try:
     {Fore.RED}@@@@@@@@@@@@@@@@@{Fore.BLUE}@@@@@@@@@@@@@@@@@@@@@@@@@  {Fore.LIGHTRED_EX}|{Fore.LIGHTWHITE_EX}><{Fore.LIGHTRED_EX}|
                                              {Fore.LIGHTBLUE_EX}_.->-v-^._.
                                             {Fore.BLUE}/ "  .  ' . {Fore.LIGHTBLUE_EX}\.
-     {Fore.RED}{Back.LIGHTYELLOW_EX}Softbody {Fore.BLUE}Earthquake{Back.BLUE} {Fore.LIGHTWHITE_EX}simulation in the command{Back.RESET}        
-     {Back.BLUE}line with fixed presets, visualization video{Back.RESET}         
-                {Back.BLUE}and useful figures.{Back.RESET}                                  
-     {Fore.RESET}
+     {Fore.RED}{Back.LIGHTYELLOW_EX}Softbody {Fore.BLUE}Earthquake{Back.BLUE} {Fore.LIGHTWHITE_EX}simulation in the command{Style.RESET_ALL}        
+     {Back.BLUE}line with fixed presets, visualization video{Style.RESET_ALL}         
+                {Back.BLUE}and useful figures.{Style.RESET_ALL}                                  
+     {Style.RESET_ALL}
      """)
 
     structure = pyip.inputMenu(
@@ -90,8 +90,8 @@ try:
             {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|    
             {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O   
             {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|   
-            {Fore.RED}O{Fore.LIGHTRED_EX}'--{Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O{Fore.RESET}   
-          {Fore.LIGHTWHITE_EX}{Back.BLUE}O===========O{Back.RESET}
+            {Fore.RED}O{Fore.LIGHTRED_EX}'--{Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O{Style.RESET_ALL}   
+          {Fore.LIGHTWHITE_EX}{Back.BLUE}O===========O{Style.RESET_ALL}
             """
         )
         points = np.array(
@@ -138,7 +138,7 @@ try:
             {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O        
             {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
             {Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O{Fore.LIGHTRED_EX}'--{Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O    
-          {Fore.LIGHTWHITE_EX}{Back.BLUE}O===============O{Back.RESET}
+          {Fore.LIGHTWHITE_EX}{Back.BLUE}O===============O{Style.RESET_ALL}
             """
         )
         points = np.array(
@@ -188,8 +188,8 @@ try:
              {Fore.LIGHTRED_EX}\ {Fore.LIGHTWHITE_EX}/ \ / \ {Fore.LIGHTRED_EX}/
               {Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O{Fore.LIGHTRED_EX}:-:{Fore.RED}O
                {Fore.LIGHTRED_EX}\ {Fore.LIGHTWHITE_EX}/ \ {Fore.LIGHTRED_EX}/        
-                {Fore.RED}O{Fore.LIGHTRED_EX}'-'{Fore.RED}O{Fore.RESET}
-             {Fore.LIGHTWHITE_EX}{Back.BLUE}O=========O{Back.RESET}
+                {Fore.RED}O{Fore.LIGHTRED_EX}'-'{Fore.RED}O{Style.RESET_ALL}
+             {Fore.LIGHTWHITE_EX}{Back.BLUE}O=========O{Style.RESET_ALL}
             """
         )
         points = np.array(
@@ -231,8 +231,8 @@ try:
           {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|
           {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}--:{Fore.RED}O    
           {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}\ {Fore.LIGHTRED_EX}|       {Fore.LIGHTRED_EX}| {Fore.LIGHTWHITE_EX}/ {Fore.LIGHTRED_EX}| 
-          {Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Fore.RESET} 
-        {Fore.LIGHTWHITE_EX}{Back.BLUE}O===================O{Back.RESET}
+          {Fore.RED}O{Fore.LIGHTRED_EX}--'{Fore.RED}O       {Fore.RED}O{Fore.LIGHTRED_EX}:--{Fore.RED}O{Style.RESET_ALL} 
+        {Fore.LIGHTWHITE_EX}{Back.BLUE}O===================O{Style.RESET_ALL}
           """
         )
         points = np.array(
@@ -287,7 +287,7 @@ try:
     print("     Spring Stiffness Diagram")
     print(
         rf"""
-      {Fore.LIGHTWHITE_EX}{Back.BLUE}D{Back.RESET}{Fore.RED}---^{Fore.LIGHTRED_EX}\/\/\/\/\/\/{Fore.RED}^---{Fore.LIGHTWHITE_EX}{Back.BLUE}O{Back.RESET} : {Fore.LIGHTGREEN_EX}{stiffness:.2e} {Fore.LIGHTGREEN_EX}N/m{Fore.LIGHTWHITE_EX}
+      {Fore.LIGHTWHITE_EX}{Back.BLUE}D{Style.RESET_ALL}{Fore.RED}---^{Fore.LIGHTRED_EX}\/\/\/\/\/\/{Fore.RED}^---{Fore.LIGHTWHITE_EX}{Back.BLUE}O{Style.RESET_ALL} : {Fore.LIGHTGREEN_EX}{stiffness:.2e} {Fore.LIGHTGREEN_EX}N/m{Fore.LIGHTWHITE_EX}
         """
     )
 
@@ -310,7 +310,7 @@ try:
     print("     Damper Dampening Diagram")
     print(
         rf"""
-      {Fore.LIGHTWHITE_EX}{Back.BLUE}D{Back.RESET}{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.LIGHTWHITE_EX}{Back.BLUE}O{Back.RESET} : {Fore.LIGHTGREEN_EX}{dampening:.2e} {Fore.LIGHTGREEN_EX}N*s/m{Fore.LIGHTWHITE_EX}
+      {Fore.LIGHTWHITE_EX}{Back.BLUE}D{Style.RESET_ALL}{Fore.RED}--------[{Fore.LIGHTRED_EX}::{Fore.RED}|--------{Fore.LIGHTWHITE_EX}{Back.BLUE}O{Style.RESET_ALL} : {Fore.LIGHTGREEN_EX}{dampening:.2e} {Fore.LIGHTGREEN_EX}N*s/m{Fore.LIGHTWHITE_EX}
         """
     )
 
@@ -338,7 +338,7 @@ try:
     print(
         rf"""
         {Fore.BLUE} .{Fore.LIGHTBLUE_EX}_________.  {Fore.LIGHTWHITE_EX}  : {Fore.LIGHTGREEN_EX}{frequency:.2f} {Fore.LIGHTGREEN_EX}Hz
-      {Fore.LIGHTWHITE_EX}{Back.BLUE}<--{Back.RESET}{Fore.BLUE}|_________{Fore.LIGHTBLUE_EX}|{Fore.LIGHTWHITE_EX}{Back.BLUE}-->{Back.RESET} {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{amplitude:.2f} {Fore.LIGHTGREEN_EX}m{Fore.LIGHTWHITE_EX}
+      {Fore.LIGHTWHITE_EX}{Back.BLUE}<--{Style.RESET_ALL}{Fore.BLUE}|_________{Fore.LIGHTBLUE_EX}|{Fore.LIGHTWHITE_EX}{Back.BLUE}-->{Style.RESET_ALL} {Fore.LIGHTWHITE_EX}: {Fore.LIGHTGREEN_EX}{amplitude:.2f} {Fore.LIGHTGREEN_EX}m{Fore.LIGHTWHITE_EX}
         """
     )
 
@@ -445,7 +445,7 @@ try:
                          [19, 20, 25], [19, 24, 25], [17, 18, 23], [17, 22, 23],
                          [18, 19, 24], [18, 23, 24]]
     except Exception:
-        print(f"{Fore.RED}Error computing the Delaunay triangulation.{Fore.RESET}")
+        print(f"{Fore.RED}Error computing the Delaunay triangulation.{Style.RESET_ALL}")
         raise Exception
 
     links: list[Link] = []
@@ -477,7 +477,7 @@ try:
             )
             triangles.append(triangle)
     except Exception:
-        print(f"{Fore.RED}Error finding the simplices in the selected structure.{Fore.RESET}")
+        print(f"{Fore.RED}Error finding the simplices in the selected structure.{Style.RESET_ALL}")
         raise Exception
 
     energies = []
@@ -500,7 +500,7 @@ try:
             for file in files:
                 remove(file)
     except Exception:
-        print(f"{Fore.RED}Error creating output folder.{Fore.RESET}")
+        print(f"{Fore.RED}Error creating output folder.{Style.RESET_ALL}")
         raise Exception
     sleep(0.5)
     print("Starting the simulation physics and animation loops.")
@@ -513,7 +513,7 @@ try:
         for s in range(fps):
             p = floor(20 * (time / etime))
             print(
-                f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Back.RED}{Fore.LIGHTWHITE_EX}{'-' * p}*{'~' * (20 - p)}{Fore.LIGHTWHITE_EX}{Back.RESET}] : {Fore.RED}Wait{Fore.LIGHTWHITE_EX} ({round(100 * time / etime)}%){Fore.LIGHTWHITE_EX}",
+                f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Back.RED}{Fore.LIGHTWHITE_EX}{'-' * p}*{'~' * (20 - p)}{Fore.LIGHTWHITE_EX}{Style.RESET_ALL}] : {Fore.RED}Wait{Fore.LIGHTWHITE_EX} ({round(100 * time / etime)}%){Fore.LIGHTWHITE_EX}",
                 end="\r")
             for i in range(ipf):
                 plate.set_kinematics(time)
@@ -741,12 +741,12 @@ try:
                 surface.write_to_png(f"output/frames/{shot:05}.png")
                 surface.finish()
             except Exception:
-                print(f"{Fore.RED}Error rendering with Cairo graphics library.{Fore.RESET}")
+                print(f"{Fore.RED}Error rendering with Cairo graphics library.{Style.RESET_ALL}")
                 raise Exception
             shot += 1
 
     print(
-        f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Back.LIGHTGREEN_EX}{Fore.LIGHTWHITE_EX}{'-' * 20}*{Back.RESET}] : {Fore.LIGHTGREEN_EX}Done{Fore.LIGHTWHITE_EX} (100%){Fore.LIGHTWHITE_EX}     ")
+        f"{Fore.LIGHTWHITE_EX}Progress {Fore.LIGHTWHITE_EX}: [{Back.LIGHTGREEN_EX}{Fore.LIGHTWHITE_EX}{'-' * 20}*{Style.RESET_ALL}] : {Fore.LIGHTGREEN_EX}Done{Fore.LIGHTWHITE_EX} (100%){Fore.LIGHTWHITE_EX}     ")
     sleep(0.5)
     print("\nAssembling the video file using the contents of the frames folder.")
     try:
@@ -756,7 +756,7 @@ try:
             .run(overwrite_output=True, quiet=True)
         )
     except Exception:
-        print(f"{Fore.RED}Error encoding with FFmpeg media library.{Fore.RESET}")
+        print(f"{Fore.RED}Error encoding with FFmpeg media library.{Style.RESET_ALL}")
         raise Exception
 
     print("Removing the frames folder.")
@@ -766,7 +766,7 @@ try:
             remove(file)
         rmdir("output/frames")
     except Exception:
-        print(f"{Fore.RED}Error deleting frames folder.{Fore.RESET}")
+        print(f"{Fore.RED}Error deleting frames folder.{Style.RESET_ALL}")
         raise Exception
 
     sleep(0.5)
@@ -826,7 +826,7 @@ try:
         fig3.savefig("output/figure3.png")
         print("Output can now be found in the output folder of the current working directory")
     except Exception:
-        print(f"{Fore.RED}Error saving graphs with matplotlib plotting library.{Fore.RESET}")
+        print(f"{Fore.RED}Error saving graphs with matplotlib plotting library.{Style.RESET_ALL}")
         raise Exception
 except KeyboardInterrupt:
     exit()
