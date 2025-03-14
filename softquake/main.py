@@ -276,11 +276,11 @@ try:
     )
 
     if stiffness == "Low":
-        stiffness = 2e6
-    elif stiffness == "Medium":
         stiffness = 4e6
-    elif stiffness == "High":
+    elif stiffness == "Medium":
         stiffness = 8e6
+    elif stiffness == "High":
+        stiffness = 6e7
     else:
         stiffness = 0
 
@@ -299,11 +299,11 @@ try:
     )
 
     if dampening == "Low":
-        dampening = 1e3
+        dampening = 5e3
     elif dampening == "Medium":
-        dampening = 2e3
+        dampening = 1e4
     elif dampening == "High":
-        dampening = 4e3
+        dampening = 2e4
     else:
         dampening = 0
 
